@@ -1,13 +1,20 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Link, router } from 'expo-router';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Page() {
   return (
-    <View style={styles.container}>
-      <View style={styles.main}>
-        <Text style={styles.title}>Hello World</Text>
-        <Text style={styles.subtitle}>This is the first page of your app.</Text>
+    <SafeAreaView>
+      <View>
+        <Text>Search input</Text>
       </View>
-    </View>
+      <View>
+        <Text>Category Selector</Text>
+      </View>
+      <View>
+        <Text>Product</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 
