@@ -1,27 +1,94 @@
-import { Tabs } from 'expo-router';
+import { Tabs, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { COLORS, SIZES } from '../../constants';
+import { Octicons } from '@expo/vector-icons';
+import { SCREENS } from '../../enums/SCREENS';
 
 const TabsLayout = () => {
   return (
-    <Tabs>
+    <Tabs
+      screenOptions={{
+        headerShadowVisible: false,
+        headerShown: false,
+        tabBarActiveTintColor: COLORS.darkerPrimary,
+        tabBarInactiveTintColor: COLORS.primary,
+        tabBarStyle: {
+          borderTopLeftRadius: 50,
+          borderTopRightRadius: 50,
+          paddingTop: SIZES.xSmall,
+        },
+      }}
+    >
       <Tabs.Screen
-        name="index"
+        name={SCREENS.INDEX}
         options={{
           headerShown: false,
+          tabBarActiveTintColor: COLORS.darkerPrimary,
+          tabBarIconStyle: {
+            color: COLORS.primary,
+          },
           title: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="home" color={color} size={size} />
+          tabBarIcon: ({ focused }) => (
+            <Octicons
+              name="home"
+              color={focused ? COLORS.darkerPrimary : COLORS.primary}
+              size={24}
+            />
           ),
         }}
       />
       <Tabs.Screen
-        name="users/[id]"
+        name={SCREENS.DISCOVER}
         options={{
           headerShown: false,
+          tabBarActiveTintColor: COLORS.darkerPrimary,
+          tabBarIconStyle: {
+            color: COLORS.primary,
+          },
+          title: 'Discover',
+          tabBarIcon: ({ focused }) => (
+            <AntDesign
+              color={focused ? COLORS.darkerPrimary : COLORS.primary}
+              name="appstore-o"
+              size={24}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name={SCREENS.WISHLIST}
+        options={{
+          headerShown: false,
+          tabBarActiveTintColor: COLORS.darkerPrimary,
+          tabBarIconStyle: {
+            color: COLORS.tertiary,
+          },
+          title: 'Wishlist',
+          tabBarIcon: ({ focused }) => (
+            <AntDesign
+              color={focused ? COLORS.darkerPrimary : COLORS.primary}
+              name="hearto"
+              size={24}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name={SCREENS.USERS + '/[id]'}
+        options={{
+          headerShown: false,
+          tabBarActiveTintColor: COLORS.darkerPrimary,
+          tabBarIconStyle: {
+            color: COLORS.primary,
+          },
           title: 'Account',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="user" color={color} size={size} />
+          tabBarIcon: ({ focused }) => (
+            <AntDesign
+              color={focused ? COLORS.darkerPrimary : COLORS.primary}
+              name="user"
+              size={24}
+            />
           ),
         }}
       />

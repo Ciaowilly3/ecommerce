@@ -1,10 +1,11 @@
 import { Link, router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { COLORS } from '../../constants';
 
 export default function Page() {
   return (
-    <SafeAreaView>
+    <View style={{ backgroundColor: COLORS.secondary }}>
       <View>
         <Text>Search input</Text>
       </View>
@@ -14,7 +15,7 @@ export default function Page() {
       <View>
         <Text>Product</Text>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
