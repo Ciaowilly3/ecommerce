@@ -5,6 +5,7 @@ import { COLORS } from '../../constants';
 import ProductsContainer from '../../components/ProductsContainer';
 import { Provider } from 'react-redux';
 import { store } from '../../store/store';
+import CategoriesConteiner from '../../components/CategoriesConteiner';
 
 export default function Page() {
   return (
@@ -14,7 +15,7 @@ export default function Page() {
           <Text>Search input</Text>
         </View>
         <View>
-          <Text>Category Selector</Text>
+          <CategoriesConteiner />
         </View>
         <View>
           <ProductsContainer />
