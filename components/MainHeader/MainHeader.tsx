@@ -7,7 +7,7 @@ import { router, useNavigation } from 'expo-router';
 const MainHeader = () => {
   const navigate = useNavigation();
   const navigateToCart = useCallback(() => {
-    navigate.navigate('cart' as never);
+    navigate.navigate('cart/index' as never);
   }, []);
   return (
     <SafeAreaView
