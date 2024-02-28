@@ -11,7 +11,7 @@ const ProductsContainer = () => {
   if (data?.products) {
     return (
       <View style={{ marginTop: SIZES.xxSmall }}>
-        <Text style={{ fontSize: SIZES.large, color: COLORS.primary }}>
+        <Text style={{ fontSize: SIZES.medium, color: COLORS.primary }}>
           Products{' '}
         </Text>
         <View
