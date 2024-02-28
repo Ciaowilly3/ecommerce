@@ -1,7 +1,11 @@
 import { Link, router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../constants';
+import ProductsContainer from '../../components/ProductsContainer';
+import { Provider } from 'react-redux';
+import { store } from '../../store/store';
 import ProductsContainer from '../../components/ProductsContainer';
 import { Provider } from 'react-redux';
 import { store } from '../../store/store';
