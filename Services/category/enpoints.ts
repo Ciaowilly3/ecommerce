@@ -22,7 +22,7 @@ type customBuilder = EndpointBuilder<
 
 const retrieveAllCategories = (builder: customBuilder) =>
   builder.query<Categories, void>({
-    query: () => URLS.CATEGORIES,
+    query: () => `${URLS.PRODUCTS}/${URLS.CATEGORIES}`,
   });
 
 export { retrieveAllCategories };
