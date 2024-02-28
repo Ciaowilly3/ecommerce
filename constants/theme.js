@@ -3,6 +3,8 @@ const COLORS = {
   darkerPrimary: '#181c1d',
   secondary: '#f0f6f6',
   tertiary: '#fdd15b',
+
+  white: '#fbffff',
 };
 
 const FONT = {
@@ -12,6 +14,7 @@ const FONT = {
 };
 
 const SIZES = {
+  xxSmall: 8,
   xSmall: 10,
   small: 12,
   medium: 16,

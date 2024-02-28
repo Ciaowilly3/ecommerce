@@ -1,7 +1,7 @@
 export enum SCREENS {
   INDEX = 'index',
-  DISCOVER = 'discover',
+  DISCOVER = 'discover/index',
   USERS = 'users',
-  WISHLIST = 'wishlist',
-  CART = 'cart',
+  WISHLIST = 'wishlist/index',
+  CART = 'cart/index',
 }
