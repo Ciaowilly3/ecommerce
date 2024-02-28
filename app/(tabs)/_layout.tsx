@@ -3,7 +3,7 @@ import React from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { COLORS, SIZES } from '../../constants';
 import { Octicons } from '@expo/vector-icons';
-import { SCREENS } from '../../enums/Screens';
+import { SCREENS } from '../../enums/Screen';
 
 const TabsLayout = () => {
   return (
