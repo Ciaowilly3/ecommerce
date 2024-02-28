@@ -9,7 +9,7 @@ import { store } from '../../store/store';
 export default function Page() {
   return (
     <Provider store={store}>
-      <ScrollView style={{ backgroundColor: COLORS.secondary }}>
+      <ScrollView style={{ backgroundColor: COLORS.white }}>
         <View>
           <Text>Search input</Text>
         </View>
