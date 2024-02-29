@@ -1,10 +1,9 @@
-export interface IProductData {
+export interface IProductsData {
   products: Products;
   total: number;
   skip: number;
   limit: number;
 }
-
 export interface IProduct {
   id: number;
   title: string;
