@@ -1,32 +1,40 @@
-import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IProduct } from '../../Interfaces/IProducts';
 import { COLORS, SIZES } from '../../constants';
+import { router } from 'expo-router';
 
 interface IProductCardProps {
   product: IProduct;
 }
 
 const ProductCard = ({ product }: IProductCardProps) => {
-  const screenWidth = Dimensions.get('window').width;
-  const dynamicWidth = screenWidth * 0.5 - SIZES.medium;
+  const { title, thumbnail, price } = product;
+  const navigateToSingleProduct = useCallback(() => {
+    router.navigate({
+      pathname: 'singleProduct/[id]',
+      params: { id: product.id },
+    });
+  }, []);
+
   return (
-    <View style={[styles.cardContainer, { width: dynamicWidth }]}>
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: product.thumbnail }} style={styles.image} />
+    <TouchableOpacity onPress={() => navigateToSingleProduct()}>
+      <View style={[styles.cardContainer]}>
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: thumbnail }} style={styles.image} />
+        </View>
+        <View>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.price}>${price}</Text>
+        </View>
       </View>
-      <View>
-        <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.price}>${product.price}</Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
-const dynamicWidth = '50% - ' + SIZES.medium;
-
 const styles = StyleSheet.create({
   cardContainer: {
+    width: 175,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'flex-start',

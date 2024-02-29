@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useRetrieveAllCategoriesQuery } from '../../Services/category/api';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import CategoryCard from '../CategoryCard';
 import _, { size } from 'lodash';
@@ -11,6 +17,13 @@ const CategoriesContainer = () => {
     isError,
     isFetching,
   } = useRetrieveAllCategoriesQuery();
+
+  const renderCategory = useCallback(
+    ({ item }: { item: string }) => (
+      <CategoryCard key={_.uniqueId()} category={item} />
+    ),
+    [categories]
+  );
   if (isError) return <Text>An error occured</Text>;
   if (isFetching) return <ActivityIndicator />;
   if (categories) {
@@ -19,28 +32,25 @@ const CategoriesContainer = () => {
         <Text style={{ fontSize: SIZES.medium, color: COLORS.primary }}>
           Categories{' '}
         </Text>
-        <ScrollView
-          horizontal={true}
-          style={{
+        <FlatList
+          data={categories}
+          renderItem={renderCategory}
+          alwaysBounceHorizontal
+          showsHorizontalScrollIndicator={false}
+          ItemSeparatorComponent={() => (
+            <View style={{ width: SIZES.small }}></View>
+          )}
+          horizontal
+          contentContainerStyle={{
             flex: 1,
             marginTop: SIZES.xxSmall,
+            maxHeight: 150,
           }}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'nowrap',
-              gap: SIZES.medium,
-            }}
-          >
-            {categories.map((category) => (
-              <CategoryCard key={_.uniqueId()} category={category} />
-            ))}
-          </View>
-        </ScrollView>
+        ></FlatList>
       </View>
     );
   }
 };
+//TODO: flatlist
 
 export default CategoriesContainer;
