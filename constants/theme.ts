@@ -4,6 +4,7 @@ const COLORS = {
   secondary: '#E3F0F0',
   tertiary: '#fdd15b',
 
+  red: '#cc0000',
   white: '#fbffff',
 };
 

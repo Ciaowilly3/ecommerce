@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router';
-import React, { useLayoutEffect } from 'react';
+import React, { useCallback, useLayoutEffect } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -14,8 +14,12 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { COLORS, SIZES } from '../../constants';
 import { Feather } from '@expo/vector-icons';
 import { useRetrieveProductByIdQuery } from '../../Services/product/api';
+import { addProductToCart } from '../../Slices/cartSlice';
+import { useDispatch } from 'react-redux';
+import Toast from 'react-native-toast-message';
 
 const singleProductPage = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const windowHeight = Dimensions.get('window').height;
   const headerHeight = useHeaderHeight();
@@ -53,6 +57,15 @@ const singleProductPage = () => {
   if (isError) return <Text>An error occured</Text>;
   if (isFetching) return <ActivityIndicator />;
   if (product) {
+    const handleAddToCart = () => {
+      dispatch(addProductToCart(product));
+
+      Toast.show({
+        type: 'info',
+        text1: 'Product added to cart',
+        text2: 'Click the 👜 to check your cart',
+      });
+    };
     const {
       brand,
       category,
@@ -100,7 +113,10 @@ const singleProductPage = () => {
             <Text style={styles.priceNumber}>${price}</Text>
           </View>
           <View>
-            <TouchableOpacity style={styles.addToCartBtn}>
+            <TouchableOpacity
+              style={styles.addToCartBtn}
+              onPress={() => handleAddToCart()}
+            >
               <Feather
                 name="shopping-bag"
                 size={24}
