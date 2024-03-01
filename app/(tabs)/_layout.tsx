@@ -1,8 +1,7 @@
 import { Tabs, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { AntDesign } from '@expo/vector-icons';
 import { COLORS, SIZES } from '../../constants';
-import { Octicons } from '@expo/vector-icons';
+import { Octicons, AntDesign } from '@expo/vector-icons';
 import { SCREENS } from '../../enums/Screen';
 
 const TabsLayout = () => {
@@ -16,7 +15,6 @@ const TabsLayout = () => {
         tabBarStyle: {
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
-          paddingTop: SIZES.xSmall,
         },
       }}
     >

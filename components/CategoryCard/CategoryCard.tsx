@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    aspectRatio: 1 / 1,
+    aspectRatio: 1,
     width: 80,
     borderRadius: 40,
     resizeMode: 'cover',

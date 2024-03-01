@@ -5,7 +5,7 @@ import {
   FetchBaseQueryError,
   FetchBaseQueryMeta,
 } from '@reduxjs/toolkit/query';
-import { IProductData, Products } from '../../Interfaces/IProducts';
+import { IProduct, IProductsData } from '../../Interfaces/IProducts';
 import { URLS } from '../../enums/Paths';
 
 type customBuilder = EndpointBuilder<
@@ -21,8 +21,15 @@ type customBuilder = EndpointBuilder<
 >;
 
 const retrieveAllProducts = (builder: customBuilder) =>
-  builder.query<IProductData, void>({
+  builder.query<IProductsData, void>({
     query: () => URLS.PRODUCTS,
   });
+const retrieveProductById = (builder: customBuilder) =>
+  builder.query<IProduct, { id: string }>({
+    query: ({ id }) => ({
+      url: `${URLS.PRODUCTS}/${id}`,
+      method: 'GET',
+    }),
+  });
 
-export { retrieveAllProducts };
+export { retrieveAllProducts, retrieveProductById };

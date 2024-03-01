@@ -1,27 +1,26 @@
-import { Link, router } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS } from '../../constants';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { COLORS, SIZES } from '../../constants';
 import ProductsContainer from '../../components/ProductsContainer';
-import { Provider } from 'react-redux';
-import { store } from '../../store/store';
 import CategoriesConteiner from '../../components/CategoriesConteiner';
 
 export default function Page() {
   return (
-    <Provider store={store}>
-      <ScrollView style={{ backgroundColor: COLORS.white }}>
-        <View>
-          <Text>Search input</Text>
-        </View>
-        <View>
-          <CategoriesConteiner />
-        </View>
-        <View>
-          <ProductsContainer />
-        </View>
-      </ScrollView>
-    </Provider>
+    <ScrollView
+      style={{
+        backgroundColor: COLORS.white,
+        paddingHorizontal: SIZES.small,
+      }}
+    >
+      <View>
+        <Text>Search input</Text>
+      </View>
+      <View>
+        <CategoriesConteiner />
+      </View>
+      <View>
+        <ProductsContainer />
+      </View>
+    </ScrollView>
   );
 }
 

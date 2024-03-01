@@ -1,11 +1,20 @@
-import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { useRetrieveAllProductsQuery } from '../../Services/product/api';
 import ProductCard from '../ProductCard';
 import { COLORS, SIZES } from '../../constants';
+import { IProduct } from '../../Interfaces/IProducts';
 
 const ProductsContainer = () => {
   const { data, isError, isFetching } = useRetrieveAllProductsQuery();
+
+  const renderProduct = useCallback(
+    ({ item }: { item: IProduct }) => (
+      <ProductCard key={item.id} product={item} />
+    ),
+    [data?.products]
+  );
+
   if (isError) return <Text>An error occured</Text>;
   if (isFetching) return <ActivityIndicator />;
   if (data?.products) {
@@ -14,19 +23,19 @@ const ProductsContainer = () => {
         <Text style={{ fontSize: SIZES.medium, color: COLORS.primary }}>
           Products{' '}
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
+        <FlatList
+          data={data.products}
+          renderItem={renderProduct}
+          numColumns={2}
+          scrollEnabled={false}
+          contentContainerStyle={{
             marginTop: SIZES.xxSmall,
-            gap: SIZES.medium,
+            rowGap: SIZES.small,
           }}
-        >
-          {data.products?.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </View>
+          columnWrapperStyle={{
+            justifyContent: 'space-between',
+          }}
+        />
       </View>
     );
   }
