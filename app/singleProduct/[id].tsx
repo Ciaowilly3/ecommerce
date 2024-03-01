@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { useLayoutEffect } from 'react';
 import {
   ActivityIndicator,
@@ -14,8 +14,6 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { COLORS, SIZES } from '../../constants';
 import { Feather } from '@expo/vector-icons';
 import { useRetrieveProductByIdQuery } from '../../Services/product/api';
-import { Provider } from 'react-redux';
-import { store } from '../../store/store';
 
 const singleProductPage = () => {
   const navigation = useNavigation();
