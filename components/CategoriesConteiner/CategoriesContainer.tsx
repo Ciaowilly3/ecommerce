@@ -1,15 +1,9 @@
 import React, { useCallback } from 'react';
 import { useRetrieveAllCategoriesQuery } from '../../Services/category/api';
-import {
-  ActivityIndicator,
-  FlatList,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import CategoryCard from '../CategoryCard';
-import _, { size } from 'lodash';
+import _ from 'lodash';
 
 const CategoriesContainer = () => {
   const {
@@ -35,12 +29,10 @@ const CategoriesContainer = () => {
         <FlatList
           data={categories}
           renderItem={renderCategory}
-          alwaysBounceHorizontal
-          showsHorizontalScrollIndicator={false}
           ItemSeparatorComponent={() => (
             <View style={{ width: SIZES.small }}></View>
           )}
-          horizontal
+          horizontal={true}
           contentContainerStyle={{
             flex: 1,
             marginTop: SIZES.xxSmall,
