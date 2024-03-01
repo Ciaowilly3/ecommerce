@@ -3,6 +3,7 @@ import React from 'react';
 import MainHeader from '../components/MainHeader/MainHeader';
 import { Provider } from 'react-redux';
 import { store } from '../store/store';
+import Toast from 'react-native-toast-message';
 
 const RootLayout = () => {
   return (
@@ -18,6 +19,7 @@ const RootLayout = () => {
           }}
         />
       </Stack>
+      <Toast />
     </Provider>
   );
 };
