@@ -12,18 +12,28 @@ import {
 } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { COLORS, SIZES } from '../../constants';
-import { Feather } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { useRetrieveProductByIdQuery } from '../../Services/product/api';
 import { addProductToCart } from '../../Slices/cartSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message';
+import {
+  addProductToWishlist,
+  removeProductFromWishlist,
+  wishlistState,
+} from '../../Slices/wishlistSlice';
+import { isProductInWishlist } from '../../utils/isProductInWishList';
+import { IProduct } from '../../Interfaces/IProducts';
 
-const singleProductPage = () => {
+const SingleProductPage = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const windowHeight = Dimensions.get('window').height;
   const headerHeight = useHeaderHeight();
   const viewHeight = windowHeight - 120 - headerHeight;
+  const wishlist = useSelector(
+    (state: { wishlist: wishlistState }) => state.wishlist
+  );
   const { id } = useLocalSearchParams();
 
   const renderImage = ({ item }: { item: string }) => (
@@ -35,7 +45,7 @@ const singleProductPage = () => {
     isError,
     isFetching,
   } = useRetrieveProductByIdQuery({
-    id: id ? id[0] : '1',
+    id: id ? id.toString() : '1',
   });
 
   useLayoutEffect(() => {
@@ -54,6 +64,20 @@ const singleProductPage = () => {
     });
   }, [navigation]);
 
+  const handleWishList = useCallback(
+    (product: IProduct) => {
+      if (isProductInWishlist(wishlist, product)) {
+        dispatch(addProductToWishlist(product));
+
+        Toast.show({
+          type: 'info',
+          text1: 'Product added to whishlist',
+          text2: 'Click the ❤️ to see your wishlist',
+        });
+      } else dispatch(removeProductFromWishlist(product));
+    },
+    [wishlist]
+  );
   if (isError) return <Text>An error occured</Text>;
   if (isFetching) return <ActivityIndicator />;
   if (product) {
@@ -63,18 +87,16 @@ const singleProductPage = () => {
       Toast.show({
         type: 'info',
         text1: 'Product added to cart',
-        text2: 'Click the 👜 to check your cart',
+        text2: 'Click the 👜 to see your cart',
       });
     };
     const {
       brand,
       category,
       description,
-      discountPercentage,
       images,
       price,
       rating,
-      stock,
       thumbnail,
       title,
     } = product;
@@ -95,7 +117,9 @@ const singleProductPage = () => {
           </View>
           <Text style={styles.title}>{title}</Text>
           <Text>{description}</Text>
-          <Text>rating : {rating}</Text>
+          <Text>
+            rating : {rating} asd {id}
+          </Text>
           <FlatList
             data={images}
             ItemSeparatorComponent={() => (
@@ -112,7 +136,22 @@ const singleProductPage = () => {
             <Text style={styles.price}>PRICE:</Text>
             <Text style={styles.priceNumber}>${price}</Text>
           </View>
-          <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              gap: SIZES.medium,
+              alignItems: 'center',
+            }}
+          >
+            <TouchableOpacity onPress={() => handleWishList(product)}>
+              <AntDesign
+                name={
+                  isProductInWishlist(wishlist, product) ? 'hearto' : 'heart'
+                }
+                size={28}
+                color={COLORS.red}
+              />
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.addToCartBtn}
               onPress={() => handleAddToCart()}
@@ -195,7 +234,7 @@ const styles = StyleSheet.create({
   },
 });
 
-singleProductPage.navigationOptions = () => ({
+SingleProductPage.navigationOptions = () => ({
   title: 'Product',
   headerRight: () => (
     <TouchableOpacity style={{ paddingRight: 20 }} onPress={() => {}}>
@@ -204,4 +243,4 @@ singleProductPage.navigationOptions = () => ({
   ),
 });
 
-export default singleProductPage;
+export default SingleProductPage;

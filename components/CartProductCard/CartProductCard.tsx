@@ -1,15 +1,22 @@
 import React, { useCallback } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { IProduct } from '../../Interfaces/IProducts';
+import { IProductCart } from '../../Interfaces/IProducts';
 import { COLORS, SIZES } from '../../constants';
 import { router } from 'expo-router';
+import { useDispatch } from 'react-redux';
+import {
+  addProductToCart,
+  removeProductFromCart,
+} from '../../Slices/cartSlice';
+import { Feather } from '@expo/vector-icons';
 
 interface CartProductCardProps {
-  product: IProduct;
+  product: IProductCart;
 }
 
 const CartProductCard = ({ product }: CartProductCardProps) => {
-  const { thumbnail, title, description, price } = product;
+  const { thumbnail, title, quantity, price } = product;
+  const dispatch = useDispatch();
   const navigateToSingleProduct = useCallback(() => {
     router.navigate({
       pathname: 'singleProduct/[id]',
@@ -17,28 +24,47 @@ const CartProductCard = ({ product }: CartProductCardProps) => {
     });
   }, []);
   return (
-    <TouchableOpacity onPress={() => navigateToSingleProduct()}>
-      <View style={styles.CardContainer}>
+    <View style={styles.CardContainer}>
+      <TouchableOpacity
+        style={{ width: '20%' }}
+        onPress={() => navigateToSingleProduct()}
+      >
         <View style={styles.imageContainer}>
           <Image source={{ uri: thumbnail }} style={styles.image} />
         </View>
-        <View style={{ width: '66%' }}>
-          <Text>{title}</Text>
-          <Text>{description}</Text>
-        </View>
-        <View
-          style={{
-            height: '100%',
-            borderLeftWidth: 1,
-            borderLeftColor: COLORS.darkerPrimary,
-            paddingEnd: 2,
-            justifyContent: 'center',
-          }}
-        >
-          <Text>${price}</Text>
+      </TouchableOpacity>
+
+      <View style={{ width: '60%' }}>
+        <Text>{title}</Text>
+        <View style={styles.textContainer}>
+          <TouchableOpacity
+            style={{ backgroundColor: COLORS.darkerPrimary, borderRadius: 4 }}
+            onPress={() => dispatch(removeProductFromCart(product))}
+          >
+            <Feather name="minus" size={24} color={COLORS.secondary} />
+          </TouchableOpacity>
+          <Text>quantity: {quantity}</Text>
+          <TouchableOpacity
+            style={{ backgroundColor: COLORS.darkerPrimary, borderRadius: 4 }}
+            onPress={() => dispatch(addProductToCart(product))}
+          >
+            <Feather name="plus" size={24} color={COLORS.secondary} />
+          </TouchableOpacity>
         </View>
       </View>
-    </TouchableOpacity>
+      <View
+        style={{
+          height: '100%',
+          width: '20%',
+          borderLeftWidth: 1,
+          borderLeftColor: COLORS.darkerPrimary,
+          paddingEnd: 2,
+          justifyContent: 'center',
+        }}
+      >
+        <Text>${price}</Text>
+      </View>
+    </View>
   );
 };
 
@@ -57,6 +83,12 @@ const styles = StyleSheet.create({
   imageContainer: {
     flexGrow: 1,
   },
+  textContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 30,
+    gap: SIZES.xSmall,
+  },
   image: {
     borderTopLeftRadius: SIZES.xxSmall,
     borderBottomLeftRadius: SIZES.xxSmall,
@@ -68,3 +100,5 @@ const styles = StyleSheet.create({
 });
 
 export default CartProductCard;
+
+//TODO: sistemare la prop per passare valore per valore
