@@ -16,14 +16,13 @@ import { useSelector } from 'react-redux';
 import { ICartState, deleteCart } from '../../Slices/cartSlice';
 import _, { size } from 'lodash';
 import { COLORS, SIZES } from '../../constants';
-import { IProduct, IProductCart } from '../../Interfaces/IProducts';
+import { IProductCart } from '../../Interfaces/IProducts';
 import CartProductCard from '../../components/CartProductCard';
 import { router, useNavigation } from 'expo-router';
 import { useHeaderHeight } from '@react-navigation/elements';
-import Toast from 'react-native-toast-message';
 import { useDispatch } from 'react-redux';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Feather } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
 
 const Cart = () => {
   const cart = useSelector((state: { cart: ICartState[] }) => state.cart);
@@ -33,15 +32,15 @@ const Cart = () => {
   const headerHeight = useHeaderHeight();
   const viewHeight = windowHeight - 120 - headerHeight;
   const [total, setTotal] = useState(0);
+  const [showAnimation, setShowAnimation] = useState(false);
 
   const handlePurchase = useCallback(() => {
     dispatch(deleteCart());
-
-    Toast.show({
-      type: 'info',
-      text1: 'Succesfull',
-      text2: 'Your order has been made, thank you customer!',
-    });
+    setShowAnimation(true);
+    setTimeout(() => {
+      router.push('/');
+      setShowAnimation(false);
+    }, 4000);
   }, [cart]);
 
   useLayoutEffect(() => {
@@ -62,6 +61,31 @@ const Cart = () => {
     ),
     [cart]
   );
+  if (showAnimation)
+    return (
+      <View
+        style={{
+          width: '100%',
+          backgroundColor: COLORS.secondary,
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: windowHeight - headerHeight,
+        }}
+      >
+        <Text style={{ fontSize: SIZES.large, color: COLORS.primary }}>
+          Your order has been sent
+        </Text>
+        <Text style={{ fontSize: SIZES.large, color: COLORS.primary }}>
+          redirecting you to the Homepage
+        </Text>
+        <LottieView
+          style={{ height: 400, width: '100%' }}
+          autoPlay
+          loop
+          source={require('../../assets/cart.json')}
+        />
+      </View>
+    );
   if (!size(cart))
     return (
       <View
@@ -90,6 +114,7 @@ const Cart = () => {
     <View style={{ height: '100%', backgroundColor: COLORS.darkerPrimary }}>
       <View style={[styles.fullPageView, { height: viewHeight }]}>
         <Text>Your cart</Text>
+
         <FlatList
           data={cart}
           ItemSeparatorComponent={() => (
