@@ -34,11 +34,9 @@ const CategoriesContainer = () => {
           )}
           horizontal={true}
           contentContainerStyle={{
-            flex: 1,
-            marginTop: SIZES.xxSmall,
             maxHeight: 150,
           }}
-        ></FlatList>
+        />
       </View>
     );
   }
