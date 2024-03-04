@@ -13,10 +13,10 @@ import {
   View,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import { cartState, deleteCart } from '../../Slices/cartSlice';
+import { ICartState, deleteCart } from '../../Slices/cartSlice';
 import _, { size } from 'lodash';
 import { COLORS, SIZES } from '../../constants';
-import { IProduct } from '../../Interfaces/IProducts';
+import { IProduct, IProductCart } from '../../Interfaces/IProducts';
 import CartProductCard from '../../components/CartProductCard';
 import { router, useNavigation } from 'expo-router';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -25,8 +25,8 @@ import { useDispatch } from 'react-redux';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Feather } from '@expo/vector-icons';
 
-const cart = () => {
-  const cart = useSelector((state: { cart: cartState }) => state.cart);
+const Cart = () => {
+  const cart = useSelector((state: { cart: ICartState[] }) => state.cart);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const windowHeight = Dimensions.get('window').height;
@@ -52,12 +52,12 @@ const cart = () => {
 
   useEffect(() => {
     let sum = 0;
-    cart.forEach((product) => (sum += product.price));
+    cart.forEach((product) => (sum += product.price * product.quantity));
     setTotal(sum);
   }, [cart]);
 
   const handleRenderCard = useCallback(
-    ({ item }: { item: IProduct }) => (
+    ({ item }: { item: IProductCart }) => (
       <CartProductCard key={_.uniqueId()} product={item} />
     ),
     [cart]
@@ -163,4 +163,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default cart;
+export default Cart;
+
+//TODO: Animazione al purchase con Lottie-react-native
