@@ -2,12 +2,11 @@ import React, { useCallback } from 'react';
 import { SafeAreaView, Text, TouchableOpacity } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { router, useNavigation } from 'expo-router';
+import { router } from 'expo-router';
 
 const MainHeader = () => {
-  const navigate = useNavigation();
   const navigateToCart = useCallback(() => {
-    navigate.navigate('cart/index' as never);
+    router.navigate('cart');
   }, []);
   return (
     <SafeAreaView

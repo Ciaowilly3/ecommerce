@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { ICartState, deleteCart } from '../../Slices/cartSlice';
 import _, { size } from 'lodash';
 import { COLORS, SIZES } from '../../constants';
@@ -20,7 +20,6 @@ import { IProductCart } from '../../Interfaces/IProducts';
 import CartProductCard from '../../components/CartProductCard';
 import { router, useNavigation } from 'expo-router';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { useDispatch } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 
@@ -114,12 +113,12 @@ const Cart = () => {
     <View style={{ height: '100%', backgroundColor: COLORS.darkerPrimary }}>
       <View style={[styles.fullPageView, { height: viewHeight }]}>
         <Text>Your cart</Text>
-
         <FlatList
           data={cart}
           ItemSeparatorComponent={() => (
-            <View style={{ height: SIZES.small }}></View>
+            <View style={{ height: SIZES.xxLarge }}></View>
           )}
+          showsVerticalScrollIndicator={false}
           renderItem={handleRenderCard}
         />
       </View>
@@ -152,8 +151,10 @@ const styles = StyleSheet.create({
   fullPageView: {
     backgroundColor: COLORS.white,
     justifyContent: 'center',
-    gap: SIZES.medium,
+    alignItems: 'center',
+    gap: SIZES.small,
     padding: SIZES.small,
+    paddingBottom: 4,
     borderBottomLeftRadius: SIZES.xxLarge,
     borderBottomRightRadius: SIZES.xxLarge,
   },
@@ -189,5 +190,3 @@ const styles = StyleSheet.create({
 });
 
 export default Cart;
-
-//TODO: Animazione al purchase con Lottie-react-native

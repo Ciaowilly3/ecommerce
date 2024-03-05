@@ -47,7 +47,7 @@ const SingleProductPage = () => {
   } = useRetrieveProductByIdQuery({
     id: id ? id.toString() : '1',
   });
-
+  //TODO: fare un controllo sul parametro id
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Product',
