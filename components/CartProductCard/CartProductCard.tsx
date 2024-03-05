@@ -25,18 +25,15 @@ const CartProductCard = ({ product }: CartProductCardProps) => {
   }, []);
   return (
     <View style={styles.CardContainer}>
-      <TouchableOpacity
-        style={{ width: '20%' }}
-        onPress={() => navigateToSingleProduct()}
-      >
+      <TouchableOpacity onPress={() => navigateToSingleProduct()}>
         <View style={styles.imageContainer}>
           <Image source={{ uri: thumbnail }} style={styles.image} />
         </View>
       </TouchableOpacity>
 
-      <View style={{ width: '60%' }}>
+      <View style={styles.textContainer}>
         <Text>{title}</Text>
-        <View style={styles.textContainer}>
+        <View style={styles.quantityContainer}>
           <TouchableOpacity
             style={{ backgroundColor: COLORS.darkerPrimary, borderRadius: 4 }}
             onPress={() => dispatch(removeProductFromCart(product))}
@@ -52,16 +49,7 @@ const CartProductCard = ({ product }: CartProductCardProps) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View
-        style={{
-          height: '100%',
-          width: '20%',
-          borderLeftWidth: 1,
-          borderLeftColor: COLORS.darkerPrimary,
-          paddingEnd: 2,
-          justifyContent: 'center',
-        }}
-      >
+      <View style={styles.price}>
         <Text>${price}</Text>
       </View>
     </View>
@@ -70,24 +58,37 @@ const CartProductCard = ({ product }: CartProductCardProps) => {
 
 const styles = StyleSheet.create({
   CardContainer: {
-    flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: SIZES.small,
     borderRadius: SIZES.xSmall,
+    gap: SIZES.small,
     borderBlockColor: COLORS.darkerPrimary,
     borderWidth: 1,
-    overflow: 'hidden',
     backgroundColor: COLORS.secondary,
+    height: 120,
   },
   imageContainer: {
     flexGrow: 1,
+    width: 80,
   },
   textContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 180,
+  },
+  quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 30,
+    justifyContent: 'center',
     gap: SIZES.xSmall,
+    padding: SIZES.small,
+  },
+  price: {
+    height: '100%',
+    width: 80,
+    borderLeftWidth: 1,
+    borderLeftColor: COLORS.darkerPrimary,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
     borderTopLeftRadius: SIZES.xxSmall,
