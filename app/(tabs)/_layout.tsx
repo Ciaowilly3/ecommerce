@@ -37,7 +37,7 @@ const TabsLayout = () => {
         }}
       />
       <Tabs.Screen
-        name={SCREENS.DISCOVER}
+        name={`${SCREENS.DISCOVER}/[category]`}
         options={{
           headerShown: false,
           tabBarActiveTintColor: COLORS.darkerPrimary,

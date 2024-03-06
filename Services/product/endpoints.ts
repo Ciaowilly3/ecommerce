@@ -31,5 +31,12 @@ const retrieveProductById = (builder: customBuilder) =>
       method: 'GET',
     }),
   });
+const retrieveProductsByCategory = (builder: customBuilder) =>
+  builder.query<IProductsData, { category: string }>({
+    query: ({ category }) => ({
+      url: `${URLS.PRODUCTS}/category/${category}`,
+      method: 'GET',
+    }),
+  });
 
-export { retrieveAllProducts, retrieveProductById };
+export { retrieveAllProducts, retrieveProductById, retrieveProductsByCategory };
