@@ -1,5 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { retrieveAllProducts, retrieveProductById } from './endpoints';
+import {
+  retrieveAllProducts,
+  retrieveProductById,
+  retrieveProductsByCategory,
+} from './endpoints';
 import { URLS } from '../../enums/Paths';
 
 export const productsApi = createApi({
@@ -10,8 +14,12 @@ export const productsApi = createApi({
   endpoints: (builder) => ({
     retrieveAllProducts: retrieveAllProducts(builder),
     retrieveProductById: retrieveProductById(builder),
+    retrieveProductsByCategory: retrieveProductsByCategory(builder),
   }),
 });
 
-export const { useRetrieveAllProductsQuery, useRetrieveProductByIdQuery } =
-  productsApi;
+export const {
+  useRetrieveAllProductsQuery,
+  useRetrieveProductByIdQuery,
+  useRetrieveProductsByCategoryQuery,
+} = productsApi;

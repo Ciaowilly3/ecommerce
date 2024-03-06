@@ -23,7 +23,13 @@ const CategoriesContainer = () => {
   if (categories) {
     return (
       <View style={{ marginTop: SIZES.xxSmall }}>
-        <Text style={{ fontSize: SIZES.medium, color: COLORS.primary }}>
+        <Text
+          style={{
+            fontSize: SIZES.medium,
+            color: COLORS.primary,
+            marginBottom: SIZES.small,
+          }}
+        >
           Categories{' '}
         </Text>
         <FlatList
@@ -41,6 +47,5 @@ const CategoriesContainer = () => {
     );
   }
 };
-//TODO: flatlist
 
 export default CategoriesContainer;

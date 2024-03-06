@@ -1,7 +1,8 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import _ from 'lodash';
+import { router } from 'expo-router';
 
 interface ICategoryCardProp {
   category: string;
@@ -10,11 +11,22 @@ interface ICategoryCardProp {
 const CategoryCard = ({ category }: ICategoryCardProp) => {
   return (
     <View style={styles.cardContainer}>
-      <Image
-        source={{ uri: `https://picsum.photos/id/${_.random(0, 500)}/800/800` }}
-        style={styles.image}
-      />
-      <Text style={styles.text}>{category}</Text>
+      <TouchableOpacity
+        onPress={() =>
+          router.navigate({
+            pathname: 'discover/[category]',
+            params: { category: category },
+          })
+        }
+      >
+        <Image
+          source={{
+            uri: `https://picsum.photos/id/${_.random(0, 500)}/800/800`,
+          }}
+          style={styles.image}
+        />
+        <Text style={styles.text}>{category}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
