@@ -60,7 +60,7 @@ const Discover = () => {
         style={styles.selectButtonStyle}
       >
         <Text style={styles.selectButtonText}>
-          {capitalize(selectedCategory) || 'Select Category'}
+          {capitalize(selectedCategory.replace('-', ' ')) || 'Select Category'}
         </Text>
         <FontAwesome
           name="chevron-circle-down"
@@ -69,7 +69,7 @@ const Discover = () => {
         />
       </TouchableOpacity>
 
-      <Modal visible={isModalVisible}>
+      <Modal visible={isModalVisible} animationType="slide">
         <SafeAreaView style={styles.modalContainer}>
           <TouchableOpacity
             onPress={handleModalVisibility}

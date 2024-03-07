@@ -24,9 +24,14 @@ const DiscoverProductsContainer = ({
     ({ item }: { item: IProduct }) => <ProductCard product={item} />,
     [data]
   );
-  if (!category) return <Text>Choose a category</Text>;
+
+  if (!category)
+    return <Text style={styles.noCategorySelected}>Choose a category</Text>;
+
   if (isFetching) return <ActivityIndicator />;
+
   if (isError) return <Text>An error occured</Text>;
+
   return (
     <View style={styles.container}>
       <Text style={styles.categoryText}>Showing our: {category}</Text>
@@ -55,6 +60,9 @@ const styles = StyleSheet.create({
   container: {
     padding: SIZES.small,
     gap: SIZES.small,
+  },
+  noCategorySelected: {
+    padding: SIZES.medium,
   },
   categoryText: {
     textAlign: 'center',
