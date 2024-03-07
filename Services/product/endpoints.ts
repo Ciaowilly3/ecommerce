@@ -22,7 +22,7 @@ type customBuilder = EndpointBuilder<
 
 const retrieveAllProducts = (builder: customBuilder) =>
   builder.query<IProductsData, void>({
-    query: () => URLS.PRODUCTS,
+    query: () => `${URLS.PRODUCTS}?limit=100`,
   });
 const retrieveProductById = (builder: customBuilder) =>
   builder.query<IProduct, { id: string }>({
