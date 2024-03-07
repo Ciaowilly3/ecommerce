@@ -34,7 +34,7 @@ const SingleProductPage = () => {
   const wishlist = useSelector(
     (state: { wishlist: wishlistState }) => state.wishlist
   );
-  const { id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams<{ id: string }>();
 
   const renderImage = ({ item }: { item: string }) => (
     <Image source={{ uri: item }} style={styles.imageList} />
@@ -45,9 +45,8 @@ const SingleProductPage = () => {
     isError,
     isFetching,
   } = useRetrieveProductByIdQuery({
-    id: id ? id.toString() : '1',
+    id: id ?? '1',
   });
-  //TODO: fare un controllo sul parametro id
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Product',
