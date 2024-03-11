@@ -4,19 +4,41 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useRetrieveAllProductsQuery } from '../../Services/product/api';
 import ProductCard from '../ProductCard';
-import { COLORS, SIZES } from '../../constants';
+import { SIZES } from '../../constants';
 import { IProduct } from '../../Interfaces/IProducts';
+import MainCategoriesSwitch from '../MainCategoriesSwitch';
 
-const ProductsContainer = () => {
-  const { data, isError, isFetching } = useRetrieveAllProductsQuery();
-  const [products, setProducts] = useState<IProduct[] | undefined>(
-    data?.products
-  );
+type ProductsContainerProps = {
+  searchedText: string;
+  setSearchedName: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const ProductsContainer = ({
+  searchedText,
+  setSearchedName,
+}: ProductsContainerProps) => {
+  const [skip, setSkip] = useState<number>(0);
+  const { data, isError, isFetching } = useRetrieveAllProductsQuery({
+    skip: skip.toString(),
+  });
+  // const { products: filteredProducts, refetch } = useRetrieveAllProductsQuery(
+  //   { skip: '30' },
+  //   {
+  //     selectFromResult: ({ data }) => ({
+  //       products: data?.products.filter(
+  //         (product) => product.category === filter
+  //       ),
+  //     }),
+  //   }
+  // );
+  // const [products, setProducts] = useState<IProduct[] | undefined>(
+  //   data?.products
+  // );
+
   const [filter, setFilter] = useState<string>('none');
 
   const renderProduct = useCallback(
@@ -26,72 +48,42 @@ const ProductsContainer = () => {
     [data?.products]
   );
 
-  useEffect(() => {
-    if (!products) handleFilter('none');
-  }, [data]);
+  // useEffect(() => handleFilter('none'), [data?.products]);
 
   const handleFilter = useCallback(
     (filter: string) => {
       setFilter(filter);
-      if (filter === 'none') {
-        setProducts(data?.products);
-        return;
-      }
-      setProducts(
-        data?.products.filter((product) => product.category === filter)
-      );
+      // filter === 'none'
+      //   ? ''
+      //   : data?.products.filter((product) => product.category === filter);
     },
-    [filter, data]
+    [filter]
   );
 
   if (isError) return <Text>An error occured</Text>;
   if (isFetching) return <ActivityIndicator />;
-  if (data?.products) {
+  else
     return (
       <View style={{ marginTop: SIZES.xxSmall }}>
-        <View style={style.switchContainer}>
-          <TouchableOpacity onPress={() => handleFilter('none')}>
-            <Text
-              style={
-                filter === 'none'
-                  ? style.switchCategoryTextActive
-                  : style.switchCategoryText
-              }
-            >
-              All
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleFilter('laptops')}>
-            <Text
-              style={
-                filter === 'laptops'
-                  ? style.switchCategoryTextActive
-                  : style.switchCategoryText
-              }
-            >
-              Laptop
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleFilter('smartphones')}>
-            <Text
-              style={
-                filter === 'smartphones'
-                  ? style.switchCategoryTextActive
-                  : style.switchCategoryText
-              }
-            >
-              Smartphones
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <MainCategoriesSwitch filter={filter} handleFilter={handleFilter} />
         <FlatList
-          data={products}
+          data={
+            filter === 'none'
+              ? data?.products
+              : data?.products.filter((product) => product.category === filter)
+          }
           renderItem={renderProduct}
+          onEndReached={
+            filter !== 'none'
+              ? () => null
+              : () => (skip >= 90 ? '' : setSkip((prev) => prev + 30))
+          }
           numColumns={2}
-          scrollEnabled={false}
+          scrollEnabled={true}
           contentContainerStyle={{
             marginTop: SIZES.xxSmall,
             rowGap: SIZES.small,
+            paddingBottom: 800,
           }}
           columnWrapperStyle={{
             justifyContent: 'space-between',
@@ -99,22 +91,13 @@ const ProductsContainer = () => {
         />
       </View>
     );
-  }
 };
 
 const style = StyleSheet.create({
-  switchCategoryText: {
-    fontSize: SIZES.medium,
-    color: COLORS.primary,
-  },
-  switchCategoryTextActive: {
-    fontSize: SIZES.medium,
-    fontWeight: 'bold',
-    color: COLORS.darkerPrimary,
-  },
-  switchContainer: {
+  textFilterContainer: {
     flexDirection: 'row',
-    gap: SIZES.small,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });
 export default ProductsContainer;

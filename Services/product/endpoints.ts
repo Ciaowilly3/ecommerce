@@ -21,8 +21,17 @@ type customBuilder = EndpointBuilder<
 >;
 
 const retrieveAllProducts = (builder: customBuilder) =>
-  builder.query<IProductsData, void>({
-    query: () => `${URLS.PRODUCTS}?limit=100`,
+  builder.query<IProductsData, { skip: string | undefined }>({
+    query: ({ skip }) => `${URLS.PRODUCTS}?skip=${skip}`,
+    serializeQueryArgs: ({ endpointName }) => {
+      return endpointName;
+    },
+    merge: (currentCache, newItems) => {
+      currentCache.products.push(...newItems.products);
+    },
+    forceRefetch({ currentArg, previousArg }) {
+      return currentArg !== previousArg;
+    },
   });
 const retrieveProductById = (builder: customBuilder) =>
   builder.query<IProduct, { id: string }>({
@@ -38,5 +47,17 @@ const retrieveProductsByCategory = (builder: customBuilder) =>
       method: 'GET',
     }),
   });
+const retrieveProductsByName = (builder: customBuilder) =>
+  builder.query<IProductsData, { name: string }>({
+    query: ({ name }) => ({
+      url: `${URLS.PRODUCTS}/search?q=${name}`,
+      method: 'GET',
+    }),
+  });
 
-export { retrieveAllProducts, retrieveProductById, retrieveProductsByCategory };
+export {
+  retrieveAllProducts,
+  retrieveProductById,
+  retrieveProductsByCategory,
+  retrieveProductsByName,
+};

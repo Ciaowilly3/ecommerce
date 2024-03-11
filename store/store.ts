@@ -4,12 +4,14 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import { categoriesApi } from '../Services/category/api';
 import cartSlice from '../Slices/cartSlice';
 import wishlistSlice from '../Slices/wishlistSlice';
+import searchedTextSlice from '../Slices/SearchedTextSlice';
 
 const rootReducers = {
   [productsApi.reducerPath]: productsApi.reducer,
   [categoriesApi.reducerPath]: categoriesApi.reducer,
   [cartSlice.reducerPath]: cartSlice.reducer,
   [wishlistSlice.reducerPath]: wishlistSlice.reducer,
+  [searchedTextSlice.reducerPath]: searchedTextSlice.reducer,
 };
 
 export const store = configureStore({
