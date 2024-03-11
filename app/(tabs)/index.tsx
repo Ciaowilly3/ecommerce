@@ -1,26 +1,44 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import ProductsContainer from '../../components/ProductsContainer';
 import CategoriesConteiner from '../../components/CategoriesConteiner';
+import SearchProductComponent from '../../components/SearchProductComponent';
+import { useState } from 'react';
+import FilteredProductsContainer from '../../components/FilteredProductsContainer';
 
 export default function Page() {
+  const [searchedName, setSearchedName] = useState<string>('');
+
   return (
-    <ScrollView
+    <View
       style={{
         backgroundColor: COLORS.white,
         paddingHorizontal: SIZES.small,
       }}
     >
       <View>
-        <Text>Search input</Text>
+        <SearchProductComponent
+          onBlurFn={(text: string) => setSearchedName(text)}
+        />
       </View>
-      <View>
-        <CategoriesConteiner />
-      </View>
-      <View>
-        <ProductsContainer />
-      </View>
-    </ScrollView>
+      {searchedName ? (
+        <View>
+          <FilteredProductsContainer
+            searchedText={searchedName}
+            setSearchedName={setSearchedName}
+          />
+        </View>
+      ) : (
+        <View>
+          <CategoriesConteiner />
+
+          <ProductsContainer
+            searchedText={searchedName}
+            setSearchedName={setSearchedName}
+          />
+        </View>
+      )}
+    </View>
   );
 }
 
