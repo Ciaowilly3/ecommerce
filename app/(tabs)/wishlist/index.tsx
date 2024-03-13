@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { wishlistState } from '../../../Slices/wishlistSlice';
 import ProductCard from '../../../components/ProductCard';
 import { IProduct } from '../../../Interfaces/IProducts';
-import { SIZES } from '../../../constants';
+import { COLORS, SIZES } from '../../../constants';
 
 const Wishlist = () => {
   const wishlist = useSelector(
@@ -14,6 +14,14 @@ const Wishlist = () => {
     ({ item }: { item: IProduct }) => <ProductCard product={item} />,
     [wishlist]
   );
+  if (wishlist.length === 0)
+    return (
+      <View style={styles.noProductsContainer}>
+        <Text style={styles.noProductsText}>
+          Add some products to your wishlist!
+        </Text>
+      </View>
+    );
   return (
     <View style={{ paddingHorizontal: SIZES.small }}>
       <FlatList
@@ -33,4 +41,18 @@ const Wishlist = () => {
   );
 };
 
+const styles = StyleSheet.create({
+  noProductsContainer: {
+    backgroundColor: COLORS.white,
+    alignItems: 'center',
+    shadowColor: COLORS.darkerPrimary,
+    shadowOpacity: 1,
+    borderBottomColor: COLORS.secondary,
+    borderBottomWidth: 1,
+    paddingBottom: SIZES.small,
+  },
+  noProductsText: {
+    fontSize: SIZES.medium,
+  },
+});
 export default Wishlist;
