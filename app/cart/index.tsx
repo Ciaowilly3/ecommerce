@@ -21,16 +21,16 @@ import CartProductCard from '../../components/CartProductCard';
 import { router, useNavigation } from 'expo-router';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Feather } from '@expo/vector-icons';
-import LottieView from 'lottie-react-native';
+import EmptyCart from '../../components/EmptyCart';
+import CartAnimation from '../../components/CartAnimation';
 
 const Cart = () => {
-  const cart = useSelector((state: { cart: ICartState[] }) => state.cart);
+  const cart = useSelector((state: { cart: ICartState }) => state.cart);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const windowHeight = Dimensions.get('window').height;
   const headerHeight = useHeaderHeight();
   const viewHeight = windowHeight - 120 - headerHeight;
-  const [total, setTotal] = useState(0);
   const [showAnimation, setShowAnimation] = useState(false);
 
   const handlePurchase = useCallback(() => {
@@ -48,12 +48,6 @@ const Cart = () => {
     });
   }, [navigation]);
 
-  useEffect(() => {
-    let sum = 0;
-    cart.forEach((product) => (sum += product.price * product.quantity));
-    setTotal(sum);
-  }, [cart]);
-
   const handleRenderCard = useCallback(
     ({ item }: { item: IProductCart }) => (
       <CartProductCard key={_.uniqueId()} product={item} />
@@ -62,59 +56,19 @@ const Cart = () => {
   );
   if (showAnimation)
     return (
-      <View
-        style={{
-          width: '100%',
-          backgroundColor: COLORS.secondary,
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: windowHeight - headerHeight,
-        }}
-      >
-        <Text style={{ fontSize: SIZES.large, color: COLORS.primary }}>
-          Your order has been sent
-        </Text>
-        <Text style={{ fontSize: SIZES.large, color: COLORS.primary }}>
-          redirecting you to the Homepage
-        </Text>
-        <LottieView
-          style={{ height: 400, width: '100%' }}
-          autoPlay
-          loop
-          source={require('../../assets/cart.json')}
-        />
-      </View>
+      <CartAnimation headerHeight={headerHeight} windowHeight={windowHeight} />
     );
-  if (!size(cart))
+  if (!size(cart.productsv))
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingTop: SIZES.medium,
-        }}
-      >
-        <Text>Your cart is empty, discover some of our </Text>
-        <TouchableOpacity
-          style={{
-            alignItems: 'center',
-            backgroundColor: COLORS.darkerPrimary,
-            borderRadius: SIZES.xxSmall,
-            padding: SIZES.xxSmall,
-          }}
-          onPress={() => router.push('/')}
-        >
-          <Text style={{ color: COLORS.secondary }}>products</Text>
-        </TouchableOpacity>
-      </View>
+      <EmptyCart headerHeight={headerHeight} windowHeight={windowHeight} />
     );
+
   return (
     <View style={{ height: '100%', backgroundColor: COLORS.darkerPrimary }}>
       <View style={[styles.fullPageView, { height: viewHeight }]}>
         <Text>Your cart</Text>
         <FlatList
-          data={cart}
+          data={cart.products}
           ItemSeparatorComponent={() => (
             <View style={{ height: SIZES.xxLarge }}></View>
           )}
@@ -124,7 +78,7 @@ const Cart = () => {
       </View>
       <View style={styles.bottomView}>
         <View>
-          <Text style={styles.priceNumber}>Total: ${total}</Text>
+          <Text style={styles.priceNumber}>Total: ${cart.total}</Text>
         </View>
         <View style={{ flexDirection: 'row', gap: SIZES.small }}>
           <TouchableOpacity
