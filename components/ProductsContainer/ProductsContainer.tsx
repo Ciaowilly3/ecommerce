@@ -1,16 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { useRetrieveAllProductsQuery } from '../../Services/product/api';
 import ProductCard from '../ProductCard';
 import { SIZES } from '../../constants';
 import { IProduct } from '../../Interfaces/IProducts';
 import MainCategoriesSwitch from '../MainCategoriesSwitch';
+import Spinner from '../Spinner';
 
 type ProductsContainerProps = {
   searchedText: string;
@@ -21,23 +16,10 @@ const ProductsContainer = ({
   searchedText,
   setSearchedName,
 }: ProductsContainerProps) => {
-  const [skip, setSkip] = useState<number>(0);
+  const [productsToSkip, setProductsToSkip] = useState<number>(0);
   const { data, isError, isFetching } = useRetrieveAllProductsQuery({
-    skip: skip.toString(),
+    productsToSkip: productsToSkip,
   });
-  // const { products: filteredProducts, refetch } = useRetrieveAllProductsQuery(
-  //   { skip: '30' },
-  //   {
-  //     selectFromResult: ({ data }) => ({
-  //       products: data?.products.filter(
-  //         (product) => product.category === filter
-  //       ),
-  //     }),
-  //   }
-  // );
-  // const [products, setProducts] = useState<IProduct[] | undefined>(
-  //   data?.products
-  // );
 
   const [filter, setFilter] = useState<string>('none');
 
@@ -48,20 +30,15 @@ const ProductsContainer = ({
     [data?.products]
   );
 
-  // useEffect(() => handleFilter('none'), [data?.products]);
-
   const handleFilter = useCallback(
     (filter: string) => {
       setFilter(filter);
-      // filter === 'none'
-      //   ? ''
-      //   : data?.products.filter((product) => product.category === filter);
     },
     [filter]
   );
 
   if (isError) return <Text>An error occured</Text>;
-  if (isFetching) return <ActivityIndicator />;
+  if (isFetching) return <Spinner />;
   else
     return (
       <View style={{ marginTop: SIZES.xxSmall }}>
@@ -76,14 +53,17 @@ const ProductsContainer = ({
           onEndReached={
             filter !== 'none'
               ? () => null
-              : () => (skip >= 90 ? '' : setSkip((prev) => prev + 30))
+              : () =>
+                  productsToSkip >= 90
+                    ? ''
+                    : setProductsToSkip((prev) => prev + 30)
           }
           numColumns={2}
           scrollEnabled={true}
           contentContainerStyle={{
             marginTop: SIZES.xxSmall,
             rowGap: SIZES.small,
-            paddingBottom: 800,
+            paddingBottom: 575,
           }}
           columnWrapperStyle={{
             justifyContent: 'space-between',
