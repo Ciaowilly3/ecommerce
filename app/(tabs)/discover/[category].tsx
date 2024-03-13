@@ -16,6 +16,7 @@ import DiscoverProductsContainer from '../../../components/DiscoverProductsConta
 import { useLocalSearchParams } from 'expo-router';
 import { CategorySearchParams } from '../../../Interfaces/ICategories';
 import { capitalize } from 'lodash';
+import Spinner from '../../../components/Spinner';
 
 const Discover = () => {
   const {
@@ -51,8 +52,8 @@ const Discover = () => {
     </TouchableOpacity>
   );
 
-  if (isFetching) return <Text>An error occured</Text>;
-  if (isError) return <ActivityIndicator />;
+  if (isFetching) return <Spinner />;
+  if (isError) return <Text>An error occured</Text>;
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     shadowColor: COLORS.darkerPrimary,
     shadowOpacity: 1,
-    borderBottomColor: COLORS.darkerPrimary,
+    borderBottomColor: COLORS.secondary,
     borderBottomWidth: 1,
   },
   selectButtonStyle: {
