@@ -1,9 +1,18 @@
 import React, { useCallback } from 'react';
 import { useRetrieveAllCategoriesQuery } from '../../Services/category/api';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import CategoryCard from '../CategoryCard';
 import _ from 'lodash';
+import Spinner from '../Spinner';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 const CategoriesContainer = () => {
   const {
@@ -19,7 +28,7 @@ const CategoriesContainer = () => {
     [categories]
   );
   if (isError) return <Text>An error occured</Text>;
-  if (isFetching) return <ActivityIndicator />;
+  if (isFetching) return <Spinner />;
   if (categories) {
     return (
       <View style={{ marginTop: SIZES.xxSmall }}>
@@ -48,4 +57,5 @@ const CategoriesContainer = () => {
   }
 };
 
+const styles = StyleSheet.create({});
 export default CategoriesContainer;
