@@ -8,6 +8,9 @@ const MainHeader = () => {
   const navigateToCart = useCallback(() => {
     router.navigate('cart');
   }, []);
+  const navigateToHome = useCallback(() => {
+    router.navigate('');
+  }, []);
   return (
     <SafeAreaView
       style={{
@@ -23,7 +26,7 @@ const MainHeader = () => {
 
       <TouchableOpacity
         style={{ flexBasis: 33.3 }}
-        onPress={() => router.push('/')}
+        onPress={() => navigateToHome()}
       >
         <Ionicons
           name="infinite"
