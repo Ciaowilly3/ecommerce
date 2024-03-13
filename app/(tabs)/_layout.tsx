@@ -1,12 +1,13 @@
-import { Tabs, useLocalSearchParams } from 'expo-router';
+import { Tabs } from 'expo-router';
 import React from 'react';
-import { COLORS, SIZES } from '../../constants';
+import { COLORS } from '../../constants';
 import { Octicons, AntDesign } from '@expo/vector-icons';
 import { SCREENS } from '../../enums/Screen';
 
 const TabsLayout = () => {
   return (
     <Tabs
+      sceneContainerStyle={{ backgroundColor: COLORS.white }}
       screenOptions={{
         headerShadowVisible: false,
         headerShown: false,
