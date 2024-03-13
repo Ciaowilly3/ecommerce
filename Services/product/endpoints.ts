@@ -21,13 +21,15 @@ type customBuilder = EndpointBuilder<
 >;
 
 const retrieveAllProducts = (builder: customBuilder) =>
-  builder.query<IProductsData, { skip: string | undefined }>({
-    query: ({ skip }) => `${URLS.PRODUCTS}?skip=${skip}`,
+  builder.query<IProductsData, { productsToSkip: number | undefined }>({
+    query: ({ productsToSkip }) => `${URLS.PRODUCTS}?skip=${productsToSkip}`,
     serializeQueryArgs: ({ endpointName }) => {
       return endpointName;
     },
     merge: (currentCache, newItems) => {
-      currentCache.products.push(...newItems.products);
+      if (newItems.products[0].id != currentCache.products[0].id) {
+        currentCache.products.push(...newItems.products);
+      }
     },
     forceRefetch({ currentArg, previousArg }) {
       return currentArg !== previousArg;
