@@ -10,6 +10,7 @@ import { useRetrieveProductsByCategoryQuery } from '../../Services/product/api';
 import { IProduct } from '../../Interfaces/IProducts';
 import ProductCard from '../ProductCard';
 import { COLORS, SIZES } from '../../constants';
+import Spinner from '../Spinner';
 type DiscoverProductsContainerProps = {
   category: string;
 };
@@ -28,7 +29,7 @@ const DiscoverProductsContainer = ({
   if (!category)
     return <Text style={styles.noCategorySelected}>Choose a category</Text>;
 
-  if (isFetching) return <ActivityIndicator />;
+  if (isFetching) return <Spinner />;
 
   if (isError) return <Text>An error occured</Text>;
 

@@ -12,6 +12,7 @@ import { COLORS, SIZES } from '../../constants';
 import { IProduct } from '../../Interfaces/IProducts';
 import ProductCard from '../ProductCard';
 import { FontAwesome5 } from '@expo/vector-icons';
+import Spinner from '../Spinner';
 
 type FilteredProductsContainerProps = {
   searchedText: string;
@@ -34,7 +35,7 @@ const FilteredProductsContainer = ({
   );
 
   if (isError) return <Text>An error occured</Text>;
-  if (isFetching) return <ActivityIndicator />;
+  if (isFetching) return <Spinner />;
   if (data?.products.length === 0)
     return <Text>No products match your search</Text>;
   return (
