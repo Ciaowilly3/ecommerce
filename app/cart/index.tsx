@@ -58,7 +58,7 @@ const Cart = () => {
     return (
       <CartAnimation headerHeight={headerHeight} windowHeight={windowHeight} />
     );
-  if (!size(cart.productsv))
+  if (!size(cart.products))
     return (
       <EmptyCart headerHeight={headerHeight} windowHeight={windowHeight} />
     );
