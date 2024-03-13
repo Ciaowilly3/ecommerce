@@ -24,6 +24,7 @@ import {
 } from '../../Slices/wishlistSlice';
 import { isProductInWishlist } from '../../utils/isProductInWishList';
 import { IProduct } from '../../Interfaces/IProducts';
+import Spinner from '../../components/Spinner';
 
 const SingleProductPage = () => {
   const dispatch = useDispatch();
@@ -78,7 +79,7 @@ const SingleProductPage = () => {
     [wishlist]
   );
   if (isError) return <Text>An error occured</Text>;
-  if (isFetching) return <ActivityIndicator />;
+  if (isFetching) return <Spinner />;
   if (product) {
     const handleAddToCart = () => {
       dispatch(addProductToCart(product));
