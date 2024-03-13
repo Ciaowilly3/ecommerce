@@ -16,27 +16,23 @@ export default function Page() {
         paddingHorizontal: SIZES.small,
       }}
     >
-      <View>
-        <SearchProductComponent
-          onBlurFn={(text: string) => setSearchedName(text)}
-        />
-      </View>
+      <SearchProductComponent
+        onBlurFn={(text: string) => setSearchedName(text)}
+      />
       {searchedName ? (
-        <View>
-          <FilteredProductsContainer
-            searchedText={searchedName}
-            setSearchedName={setSearchedName}
-          />
-        </View>
+        <FilteredProductsContainer
+          searchedText={searchedName}
+          setSearchedName={setSearchedName}
+        />
       ) : (
-        <View>
+        <>
           <CategoriesConteiner />
 
           <ProductsContainer
             searchedText={searchedName}
             setSearchedName={setSearchedName}
           />
-        </View>
+        </>
       )}
     </View>
   );
