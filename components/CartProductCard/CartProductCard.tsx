@@ -6,6 +6,7 @@ import { router } from 'expo-router';
 import { useDispatch } from 'react-redux';
 import {
   addProductToCart,
+  decreaseProductQuantity,
   removeProductFromCart,
 } from '../../Slices/cartSlice';
 import { Feather } from '@expo/vector-icons';
@@ -33,20 +34,44 @@ const CartProductCard = ({ product }: CartProductCardProps) => {
 
       <View style={styles.textContainer}>
         <Text>{title}</Text>
-        <View style={styles.quantityContainer}>
-          <TouchableOpacity
-            style={{ backgroundColor: COLORS.darkerPrimary, borderRadius: 4 }}
-            onPress={() => dispatch(removeProductFromCart(product))}
-          >
-            <Feather name="minus" size={24} color={COLORS.secondary} />
-          </TouchableOpacity>
-          <Text>quantity: {quantity}</Text>
-          <TouchableOpacity
-            style={{ backgroundColor: COLORS.darkerPrimary, borderRadius: 4 }}
-            onPress={() => dispatch(addProductToCart(product))}
-          >
-            <Feather name="plus" size={24} color={COLORS.secondary} />
-          </TouchableOpacity>
+        <View style={styles.buttonsContainer}>
+          <View style={styles.quantityContainer}>
+            <TouchableOpacity
+              style={
+                product.quantity === 1
+                  ? styles.removeIcon
+                  : styles.handleQuantityIcon
+              }
+              onPress={() =>
+                product.quantity === 1
+                  ? dispatch(removeProductFromCart(product))
+                  : dispatch(decreaseProductQuantity(product))
+              }
+            >
+              <Feather
+                name={product.quantity === 1 ? 'trash' : 'minus'}
+                size={24}
+                color={COLORS.secondary}
+              />
+            </TouchableOpacity>
+            <Text>{quantity}</Text>
+            <TouchableOpacity
+              style={styles.handleQuantityIcon}
+              onPress={() => dispatch(addProductToCart(product))}
+            >
+              <Feather name="plus" size={24} color={COLORS.secondary} />
+            </TouchableOpacity>
+          </View>
+          {product.quantity === 1 ? (
+            ''
+          ) : (
+            <TouchableOpacity
+              style={styles.removeIcon}
+              onPress={() => dispatch(removeProductFromCart(product))}
+            >
+              <Feather name="trash" size={24} color={COLORS.secondary} />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <View style={styles.price}>
@@ -61,10 +86,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: SIZES.xSmall,
     gap: SIZES.small,
-    borderBlockColor: COLORS.darkerPrimary,
+    borderColor: COLORS.primary,
     borderWidth: 1,
     backgroundColor: COLORS.secondary,
     height: 120,
+    shadowColor: COLORS.darkerPrimary,
+    shadowOpacity: 0.4,
+    shadowRadius: SIZES.small,
+    shadowOffset: { width: 6, height: 12 },
   },
   imageContainer: {
     flexGrow: 1,
@@ -74,19 +103,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: 180,
+    gap: SIZES.small,
   },
   quantityContainer: {
+    backgroundColor: COLORS.white,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     gap: SIZES.xSmall,
-    padding: SIZES.small,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: SIZES.xSmall,
+  },
+  handleQuantityIcon: {
+    backgroundColor: COLORS.darkerPrimary,
+    borderRadius: 4,
+    padding: 2,
+  },
+  removeIcon: {
+    backgroundColor: COLORS.red,
+    padding: 2,
+    borderRadius: 4,
   },
   price: {
     height: '100%',
     width: 80,
     borderLeftWidth: 1,
-    borderLeftColor: COLORS.darkerPrimary,
+    borderLeftColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
