@@ -42,17 +42,10 @@ const cartSlice = createSlice({
       };
     },
     decreaseProductQuantity: (state, action: PayloadAction<IProductCart>) => {
-      const productToRemove = state.products.find(
-        (product) => product.id === action.payload.id
-      );
-      if (!productToRemove) return;
-      return {
-        products: [
-          ...state.products,
-          { ...productToRemove, quantity: productToRemove.quantity - 1 },
-        ],
-        total: state.total - productToRemove.price,
-      };
+      state.products.forEach((product) => {
+        product.id === action.payload.id ? (product.quantity -= 1) : '';
+      });
+      state.total -= action.payload.price;
     },
     deleteCart: () => {
       return initialState;
@@ -60,9 +53,10 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addProductToCart, deleteCart, removeProductFromCart } =
-  cartSlice.actions;
+export const {
+  addProductToCart,
+  deleteCart,
+  removeProductFromCart,
+  decreaseProductQuantity,
+} = cartSlice.actions;
 export default cartSlice;
-
-//TODO: emulare amazon se quntity 1 cestino e altra action
-//TODO: bordo grigio e shadow
