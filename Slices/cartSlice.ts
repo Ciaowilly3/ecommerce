@@ -30,20 +30,25 @@ const cartSlice = createSlice({
         };
     },
     removeProductFromCart: (state, action: PayloadAction<IProductCart>) => {
-      const existingProduct = state.products.find(
+      const productToRemove = state.products.find(
         (product) => product.id === action.payload.id
       );
-
-      if (existingProduct?.quantity === 1) {
+      if (!productToRemove) return;
+      if (productToRemove.quantity === 1) {
         return {
           products: state.products.filter(
             (product) => product.id !== action.payload.id
           ),
-          total: state.total - existingProduct.price,
+          total: state.total - productToRemove.price,
         };
       } else {
-        existingProduct ? (existingProduct.quantity -= 1) : '';
-        state.total -= existingProduct ? existingProduct.price : 0;
+        return {
+          products: [
+            ...state.products,
+            { ...productToRemove, quantity: productToRemove.quantity - 1 },
+          ],
+          total: state.total - productToRemove.price,
+        };
       }
     },
     deleteCart: () => {
@@ -55,3 +60,6 @@ const cartSlice = createSlice({
 export const { addProductToCart, deleteCart, removeProductFromCart } =
   cartSlice.actions;
 export default cartSlice;
+
+//TODO: emulare amazon se quntity 1 cestino e altra action
+//TODO: bordo grigio e shadow
