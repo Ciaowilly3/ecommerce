@@ -42,10 +42,17 @@ const cartSlice = createSlice({
       };
     },
     decreaseProductQuantity: (state, action: PayloadAction<IProductCart>) => {
-      state.products.forEach((product) => {
-        product.id === action.payload.id ? (product.quantity -= 1) : '';
-      });
-      state.total -= action.payload.price;
+      const productToDecrease = state.products.find(
+        (product) => product.id === action.payload.id
+      );
+      if (!productToDecrease) return;
+      return {
+        products: state.products.map((product) => {
+          if (product.id !== productToDecrease.id) return product;
+          return { ...product, quantity: product.quantity - 1 };
+        }),
+        total: state.total - productToDecrease.price,
+      };
     },
     deleteCart: () => {
       return initialState;
