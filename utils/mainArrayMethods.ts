@@ -1,15 +1,22 @@
 interface IMyArray {
-  myArray: Array<any>;
   myForeach: (callback: (myArrayElement: any) => undefined) => undefined;
   myMap: (callback: (myArrayElement: any) => any) => any[];
   myFilter: (callback: (myArrayElement: any) => boolean) => any[];
 }
 
 class MyArray implements IMyArray {
-  myArray: any[];
+  private myArray: any[];
 
   constructor(initialArray?: Array<any>) {
     this.myArray = initialArray || [];
+  }
+
+  set(newArray: any[]) {
+    this.myArray = newArray;
+  }
+
+  get(): typeof this.myArray {
+    return this.myArray;
   }
 
   myForeach(callback: (myArrayElement: any) => undefined) {
