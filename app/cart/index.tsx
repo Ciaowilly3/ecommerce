@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
   purchaseBtn: {
     padding: SIZES.small,
-    backgroundColor: '#e1c26f',
+    backgroundColor: COLORS.yellow,
     borderRadius: SIZES.xSmall,
     flexDirection: 'row',
     alignItems: 'center',

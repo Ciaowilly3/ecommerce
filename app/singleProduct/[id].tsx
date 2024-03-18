@@ -25,6 +25,7 @@ import {
 import { isProductInWishlist } from '../../utils/isProductInWishList';
 import { IProduct } from '../../Interfaces/IProducts';
 import Spinner from '../../components/Spinner';
+import Rating from '../../components/Rating';
 
 const SingleProductPage = () => {
   const dispatch = useDispatch();
@@ -117,7 +118,9 @@ const SingleProductPage = () => {
           </View>
           <Text style={styles.title}>{title}</Text>
           <Text>{description}</Text>
-          <Text>rating : {rating}</Text>
+          <View style={styles.ratingContainer}>
+            <Rating rating={rating} />
+          </View>
           <FlatList
             data={images}
             ItemSeparatorComponent={() => (
@@ -230,9 +233,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imageList: {
+    marginTop: SIZES.xxSmall,
     height: 80,
     width: 80,
     borderRadius: SIZES.xSmall,
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    gap: 2,
   },
 });
 
