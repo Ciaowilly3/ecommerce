@@ -117,9 +117,7 @@ const SingleProductPage = () => {
           </View>
           <Text style={styles.title}>{title}</Text>
           <Text>{description}</Text>
-          <Text>
-            rating : {rating} asd {id}
-          </Text>
+          <Text>rating : {rating}</Text>
           <FlatList
             data={images}
             ItemSeparatorComponent={() => (
@@ -169,6 +167,10 @@ const SingleProductPage = () => {
     );
   }
 };
+
+//TODO: componente stelle rating
+//TODO: in account mettere login e signup e non poter effettuare pagamento senza, con async storage
+//TODO: faceID per il purchase
 
 const styles = StyleSheet.create({
   fullPageView: {
