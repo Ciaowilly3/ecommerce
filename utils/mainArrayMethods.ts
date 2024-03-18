@@ -1,5 +1,5 @@
 interface IMyArray {
-  myForeach: (callback: (myArrayElement: any) => undefined) => undefined;
+  myForeach: (callback: (myArrayElement: any) => void) => void;
   myMap: (callback: (myArrayElement: any) => any) => any[];
   myFilter: (callback: (myArrayElement: any) => boolean) => any[];
 }
@@ -19,11 +19,10 @@ class MyArray implements IMyArray {
     return this.myArray;
   }
 
-  myForeach(callback: (myArrayElement: any) => undefined) {
+  myForeach(callback: (myArrayElement: any) => void) {
     for (const element of this.myArray) {
       callback(element);
     }
-    return undefined;
   }
 
   myMap(callback: (myArrayElement: any) => any) {
