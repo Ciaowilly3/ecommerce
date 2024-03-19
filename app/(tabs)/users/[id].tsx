@@ -12,7 +12,7 @@ const UserPage = () => {
   const [user, setUser] = useState<IUser>({ name: '', password: '' });
   const handleVisibility = useCallback(() => {
     setIsModalVisible((prev) => !prev);
-  }, [isModalVisible]);
+  }, []);
 
   const getCurrentlyLoggedUser = useCallback(async () => {
     try {
@@ -21,10 +21,10 @@ const UserPage = () => {
     } catch (e) {
       setError(true);
     }
-  }, [user]);
+  }, []);
   useEffect(() => {
     getCurrentlyLoggedUser();
-  }, [user]);
+  }, [getCurrentlyLoggedUser]);
 
   if (error) return <Text>Uuups we had an error!</Text>;
   return (

@@ -21,7 +21,7 @@ const LoginForm = ({ handleVisibility }: Props) => {
         [field]: input,
       }));
     },
-    [user]
+    []
   );
   const handleSubmit = useCallback(async () => {
     try {
@@ -30,18 +30,19 @@ const LoginForm = ({ handleVisibility }: Props) => {
     } catch (e) {
       setError(true);
     }
-  }, [user]);
+  }, [handleVisibility, user]);
 
   if (error) return <Text>Uuups we had an error</Text>;
+
   return (
     <>
       <InputText
         onBlurFn={(input) => handleBlur(input, 'name')}
-        placeholder="Name"
+        placeholder={'name'}
       />
       <InputText
         onBlurFn={(input) => handleBlur(input, 'password')}
-        placeholder="password"
+        placeholder={'password'}
         isPassword={true}
       />
       <View style={styles.buttonContainer}>

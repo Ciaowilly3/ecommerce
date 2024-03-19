@@ -16,7 +16,7 @@ const LogSignInFormModal = ({
 }: LogSignInFormModalProps) => {
   const [isLoginForm, setIsLoginForm] = useState<boolean>(true);
   return (
-    <Modal visible={isModalVisible} animationType="fade">
+    <Modal visible={isModalVisible} animationType="slide">
       <SafeAreaView style={styles.modalContainer}>
         <View style={styles.formSwitchContainer}>
           <TouchableOpacity
