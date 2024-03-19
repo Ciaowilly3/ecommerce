@@ -1,15 +1,15 @@
 import { FontAwesome } from '@expo/vector-icons';
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { COLORS } from '../../constants';
 
-type RatingProps = {
+interface IRatingProps {
   rating: number;
-};
+}
 
-const Rating = ({ rating }: RatingProps) => {
+const Rating = ({ rating }: IRatingProps) => {
   const decimal = rating - Math.floor(rating);
 
-  const createStars = useCallback(() => {
+  const createStars = useMemo(() => {
     const star = [];
     let name = '';
     for (let i = 1; i < 6; i++) {
@@ -27,7 +27,9 @@ const Rating = ({ rating }: RatingProps) => {
     }
     return star;
   }, [rating]);
-  return createStars();
+  return createStars;
 };
+
+//TODO: cercare metodo migliore
 
 export default Rating;
