@@ -1,20 +1,23 @@
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
 import { COLORS, SIZES } from '../../constants';
 import LoginForm from '../LoginForm';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState } from 'react';
 import SigninForm from '../SigninForm';
 
 type LogSignInFormModalProps = {
   handleVisibility: () => void;
   isModalVisible: boolean;
+  isLoginForm: boolean;
+  setIsLoginForm: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const LogSignInFormModal = ({
   handleVisibility,
   isModalVisible,
+  isLoginForm,
+  setIsLoginForm,
 }: LogSignInFormModalProps) => {
-  const [isLoginForm, setIsLoginForm] = useState<boolean>(true);
   return (
     <Modal visible={isModalVisible} animationType="slide">
       <SafeAreaView style={styles.modalContainer}>
