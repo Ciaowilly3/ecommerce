@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -23,6 +18,9 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { Feather } from '@expo/vector-icons';
 import EmptyCart from '../../components/EmptyCart';
 import CartAnimation from '../../components/CartAnimation';
+import { IUser } from '../../Interfaces/IUser';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 const Cart = () => {
   const cart = useSelector((state: { cart: ICartState }) => state.cart);
@@ -31,16 +29,31 @@ const Cart = () => {
   const windowHeight = Dimensions.get('window').height;
   const headerHeight = useHeaderHeight();
   const viewHeight = windowHeight - 120 - headerHeight;
+  const [user, setUser] = useState<IUser>({ name: '', password: '' });
   const [showAnimation, setShowAnimation] = useState(false);
 
-  const handlePurchase = useCallback(() => {
+  const handlePurchase = useCallback(async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('loggedUser');
+      jsonValue != null ? setUser(JSON.parse(jsonValue)) : null;
+    } catch (e) {
+      return;
+    }
+    if (!user.name) {
+      Toast.show({
+        type: 'error',
+        text1: 'You must log before Buying anything!',
+        text2: 'Click the 🙍🏻‍♂️ below on the right to login!',
+      });
+      return;
+    }
     dispatch(deleteCart());
     setShowAnimation(true);
     setTimeout(() => {
       router.push('/');
       setShowAnimation(false);
     }, 4000);
-  }, [cart]);
+  }, [dispatch]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -52,7 +65,7 @@ const Cart = () => {
     ({ item }: { item: IProductCart }) => (
       <CartProductCard key={_.uniqueId()} product={item} />
     ),
-    [cart]
+    []
   );
   if (showAnimation)
     return (
