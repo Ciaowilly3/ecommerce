@@ -1,9 +1,9 @@
 export interface IUser {
   name: string;
-  password: string;
+  email: string;
 }
 
 export interface IUserComplete extends IUser {
-  email: string;
+  password: string;
   confirmPassword: string;
 }

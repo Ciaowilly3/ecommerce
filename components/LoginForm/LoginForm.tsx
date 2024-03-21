@@ -11,18 +11,15 @@ type Props = {
 };
 
 const LoginForm = ({ handleVisibility }: Props) => {
-  const [user, setUser] = useState<IUser>({ name: '', password: '' });
+  const [user, setUser] = useState<IUser>({ name: '', email: '' });
   const [error, setError] = useState<boolean>(false);
 
-  const handleBlur = useCallback(
-    (input: string, field: 'name' | 'password') => {
-      setUser((prevUser) => ({
-        ...prevUser,
-        [field]: input,
-      }));
-    },
-    []
-  );
+  const handleBlur = useCallback((input: string, field: 'name' | 'email') => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      [field]: input,
+    }));
+  }, []);
   const handleSubmit = useCallback(async () => {
     try {
       await AsyncStorage.setItem('loggedUser', JSON.stringify(user));
@@ -41,7 +38,11 @@ const LoginForm = ({ handleVisibility }: Props) => {
         placeholder={'name'}
       />
       <InputText
-        onBlurFn={(input) => handleBlur(input, 'password')}
+        onBlurFn={(input) => handleBlur(input, 'email')}
+        placeholder={'email'}
+      />
+      <InputText
+        onBlurFn={() => null}
         placeholder={'password'}
         isPassword={true}
       />
@@ -49,7 +50,7 @@ const LoginForm = ({ handleVisibility }: Props) => {
         <TouchableOpacity
           onPress={handleSubmit}
           style={styles.submitInput}
-          disabled={!(user.name && user.password)}
+          disabled={!(user.name && user.email)}
         >
           <Text style={styles.submitInputText}>Submit</Text>
         </TouchableOpacity>

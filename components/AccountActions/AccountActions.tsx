@@ -1,40 +1,47 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+import { IUser } from '../../Interfaces/IUser';
 
 interface IAccountActionsProps {
   handleVisibility: (action?: 'signin' | 'login' | 'logout') => void;
+  user: IUser;
 }
-const AccountActions = ({ handleVisibility }: IAccountActionsProps) => {
+const AccountActions = ({ handleVisibility, user }: IAccountActionsProps) => {
+  const { removeItem } = useAsyncStorage('loggedUser');
+
+  const name = useMemo(() => user.name, [user]);
+
   const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('loggedUser');
-    } catch (e) {
-      return;
-    }
-    handleVisibility('logout');
+    await removeItem();
   };
+
   return (
     <>
-      <TouchableOpacity
-        onPress={() => handleVisibility('login')}
-        style={[styles.loginBtn, styles.btn]}
-      >
-        <Text>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => handleVisibility('signin')}
-        style={[styles.signinBtn, styles.btn]}
-      >
-        <Text style={styles.signinTxt}>SignIn</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={handleLogout}
-        style={[styles.logoutBtn, styles.btn]}
-      >
-        <Text style={styles.logoutTxt}>Logout</Text>
-      </TouchableOpacity>
+      {!name ? (
+        <>
+          <TouchableOpacity
+            onPress={() => handleVisibility('login')}
+            style={[styles.loginBtn, styles.btn]}
+          >
+            <Text>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleVisibility('signin')}
+            style={[styles.signinBtn, styles.btn]}
+          >
+            <Text style={styles.signinTxt}>SignIn</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <TouchableOpacity
+          onPress={handleLogout}
+          style={[styles.logoutBtn, styles.btn]}
+        >
+          <Text style={styles.logoutTxt}>Logout</Text>
+        </TouchableOpacity>
+      )}
     </>
   );
 };

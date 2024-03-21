@@ -2,23 +2,24 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import LogSignInFormModal from '../../../components/LogSignInFormModal';
 import { IUser } from '../../../Interfaces/IUser';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { COLORS, SIZES } from '../../../constants';
 import AccountActions from '../../../components/AccountActions';
+import AccountDetails from '../../../components/AccountDetails';
 
 const UserPage = () => {
-  const [error, setError] = useState<boolean>(false);
   const [isLoginForm, setIsLoginForm] = useState<boolean>(true);
-  const [user, setUser] = useState<IUser>({ name: '', password: '' });
+  const [user, setUser] = useState<IUser>({ name: '', email: '' });
+  const { getItem } = useAsyncStorage('loggedUser');
 
   const getCurrentlyLoggedUser = useCallback(async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('loggedUser');
-      jsonValue != null ? setUser(JSON.parse(jsonValue)) : null;
-    } catch (e) {
-      setError(true);
+    const jsonUser = await getItem();
+    if (!jsonUser) {
+      setUser({ name: '', email: '' });
+      return;
     }
-  }, []);
+    setUser(JSON.parse(jsonUser));
+  }, [getItem]);
   const handleVisibility = useCallback(
     (action?: 'signin' | 'login' | 'logout') => {
       if (action === 'logout') {
@@ -39,12 +40,10 @@ const UserPage = () => {
     user ? false : true
   );
 
-  if (error) return <Text>Uuups we had an error!</Text>;
-
   return (
     <View style={styles.mainContainer}>
       <View style={styles.btnContainer}>
-        <AccountActions handleVisibility={handleVisibility} />
+        <AccountActions user={user} handleVisibility={handleVisibility} />
       </View>
       <LogSignInFormModal
         handleVisibility={handleVisibility}
@@ -57,7 +56,9 @@ const UserPage = () => {
           You are not logged, login o create an account using buttons above
         </Text>
       ) : (
-        <Text>{user.name}</Text>
+        <>
+          <AccountDetails user={user} />
+        </>
       )}
     </View>
   );
