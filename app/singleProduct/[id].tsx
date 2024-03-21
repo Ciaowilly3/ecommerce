@@ -1,7 +1,6 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { useCallback, useLayoutEffect } from 'react';
 import {
-  ActivityIndicator,
   Dimensions,
   FlatList,
   Image,

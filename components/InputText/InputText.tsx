@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { setSearchedText } from '../../Slices/SearchedTextSlice';
+import React, { useState } from 'react';
+import { StyleSheet, TextInput, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 
-type SearchProductComponentProps = {
-  // searchedName: string;
-  // setSearchedName: React.Dispatch<React.SetStateAction<string>>;
+type InputTextProps = {
   onBlurFn: (text: string) => void;
+  placeholder: string;
+  isPassword?: boolean;
 };
 
-const SearchProductComponent = ({
-  // searchedName,
-  // setSearchedName,
-  onBlurFn,
-}: SearchProductComponentProps) => {
+const InputText = ({ onBlurFn, placeholder, isPassword }: InputTextProps) => {
   const [searchedName, setSearchedName] = useState<string>('');
+  console.log(placeholder);
+
   return (
     <View style={styles.inputContainer}>
       <TextInput
@@ -23,7 +19,8 @@ const SearchProductComponent = ({
         value={searchedName}
         onChangeText={setSearchedName}
         onBlur={() => onBlurFn(searchedName)}
-        placeholder="search product..."
+        placeholder={placeholder}
+        secureTextEntry={isPassword}
       />
     </View>
   );
@@ -47,4 +44,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchProductComponent;
+export default InputText;

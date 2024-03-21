@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import ProductsContainer from '../../components/ProductsContainer';
 import CategoriesConteiner from '../../components/CategoriesConteiner';
-import SearchProductComponent from '../../components/SearchProductComponent';
+import SearchProductComponent from '../../components/InputText';
 import { useState } from 'react';
 import FilteredProductsContainer from '../../components/FilteredProductsContainer';
 
@@ -18,6 +18,7 @@ export default function Page() {
     >
       <SearchProductComponent
         onBlurFn={(text: string) => setSearchedName(text)}
+        placeholder="search products..."
       />
       {searchedName ? (
         <FilteredProductsContainer
