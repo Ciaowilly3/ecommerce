@@ -12,7 +12,7 @@ const Wishlist = () => {
   );
   const renderProduct = useCallback(
     ({ item }: { item: IProduct }) => <ProductCard product={item} />,
-    [wishlist]
+    []
   );
   if (wishlist.length === 0)
     return (

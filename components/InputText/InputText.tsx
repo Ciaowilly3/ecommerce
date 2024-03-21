@@ -10,7 +10,6 @@ type InputTextProps = {
 
 const InputText = ({ onBlurFn, placeholder, isPassword }: InputTextProps) => {
   const [searchedName, setSearchedName] = useState<string>('');
-  console.log(placeholder);
 
   return (
     <View style={styles.inputContainer}>

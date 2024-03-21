@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
   FlatList,
   Modal,
   SafeAreaView,
@@ -31,12 +30,12 @@ const Discover = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   useEffect(
     () => setSelectedCategory(category ?? selectedCategory),
-    [category]
+    [category, selectedCategory]
   );
 
   const handleModalVisibility = useCallback(() => {
     setIsModalVisible((prev) => !prev);
-  }, [isModalVisible]);
+  }, []);
 
   const handleCategorySelect = (selected: string) => {
     setSelectedCategory(selected);

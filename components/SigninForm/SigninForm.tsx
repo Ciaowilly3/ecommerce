@@ -29,7 +29,7 @@ const SigninForm = ({ handleVisibility }: Props) => {
         [field]: input,
       }));
     },
-    [user]
+    []
   );
   const handleSubmit = useCallback(async () => {
     try {
@@ -38,7 +38,7 @@ const SigninForm = ({ handleVisibility }: Props) => {
     } catch (e) {
       setError(true);
     }
-  }, [user]);
+  }, [handleVisibility, user]);
 
   if (error) return <Text>Uuups we had an error</Text>;
   return (

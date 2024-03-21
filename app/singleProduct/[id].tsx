@@ -76,7 +76,7 @@ const SingleProductPage = () => {
         });
       } else dispatch(removeProductFromWishlist(product));
     },
-    [wishlist]
+    [wishlist, dispatch]
   );
   if (isError) return <Text>An error occured</Text>;
   if (isFetching) return <Spinner />;
@@ -169,10 +169,6 @@ const SingleProductPage = () => {
     );
   }
 };
-
-//TODO: componente stelle rating
-//TODO: in account mettere login e signup e non poter effettuare pagamento senza, con async storage
-//TODO: faceID per il purchase
 
 const styles = StyleSheet.create({
   fullPageView: {

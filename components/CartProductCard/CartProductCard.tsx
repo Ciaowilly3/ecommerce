@@ -23,7 +23,7 @@ const CartProductCard = ({ product }: CartProductCardProps) => {
       pathname: 'singleProduct/[id]',
       params: { id: product.id },
     });
-  }, []);
+  }, [product]);
   return (
     <View style={styles.CardContainer}>
       <TouchableOpacity onPress={() => navigateToSingleProduct()}>
@@ -37,22 +37,11 @@ const CartProductCard = ({ product }: CartProductCardProps) => {
         <View style={styles.buttonsContainer}>
           <View style={styles.quantityContainer}>
             <TouchableOpacity
-              style={
-                product.quantity === 1
-                  ? styles.removeIcon
-                  : styles.handleQuantityIcon
-              }
-              onPress={() =>
-                product.quantity === 1
-                  ? dispatch(removeProductFromCart(product))
-                  : dispatch(decreaseProductQuantity(product))
-              }
+              style={styles.handleQuantityIcon}
+              onPress={() => dispatch(decreaseProductQuantity(product))}
+              disabled={product.quantity === 1}
             >
-              <Feather
-                name={product.quantity === 1 ? 'trash' : 'minus'}
-                size={24}
-                color={COLORS.secondary}
-              />
+              <Feather name={'minus'} size={24} color={COLORS.secondary} />
             </TouchableOpacity>
             <Text>{quantity}</Text>
             <TouchableOpacity
@@ -62,16 +51,13 @@ const CartProductCard = ({ product }: CartProductCardProps) => {
               <Feather name="plus" size={24} color={COLORS.secondary} />
             </TouchableOpacity>
           </View>
-          {product.quantity === 1 ? (
-            ''
-          ) : (
-            <TouchableOpacity
-              style={styles.removeIcon}
-              onPress={() => dispatch(removeProductFromCart(product))}
-            >
-              <Feather name="trash" size={24} color={COLORS.secondary} />
-            </TouchableOpacity>
-          )}
+
+          <TouchableOpacity
+            style={styles.removeIcon}
+            onPress={() => dispatch(removeProductFromCart(product))}
+          >
+            <Feather name="trash" size={24} color={COLORS.secondary} />
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.price}>
@@ -147,5 +133,3 @@ const styles = StyleSheet.create({
 });
 
 export default CartProductCard;
-
-//TODO: sistemare la prop per passare valore per valore
