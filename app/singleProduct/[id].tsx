@@ -1,7 +1,6 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { useCallback, useLayoutEffect } from 'react';
 import {
-  Dimensions,
   FlatList,
   Image,
   StyleSheet,
@@ -9,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { COLORS, SIZES } from '../../constants';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { useRetrieveProductByIdQuery } from '../../Services/product/api';
@@ -25,13 +23,12 @@ import { isProductInWishlist } from '../../utils/isProductInWishList';
 import { IProduct } from '../../Interfaces/IProducts';
 import Spinner from '../../components/Spinner';
 import Rating from '../../components/Rating';
+import useCalcBodyHeight from '../../Hooks/useCalcBodyHeight';
 
 const SingleProductPage = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const windowHeight = Dimensions.get('window').height;
-  const headerHeight = useHeaderHeight();
-  const viewHeight = windowHeight - 120 - headerHeight;
+  const viewHeight = useCalcBodyHeight(120);
   const wishlist = useSelector(
     (state: { wishlist: wishlistState }) => state.wishlist
   );
