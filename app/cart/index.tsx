@@ -5,7 +5,6 @@ import React, {
   useState,
 } from 'react';
 import {
-  Dimensions,
   FlatList,
   StyleSheet,
   Text,
@@ -14,12 +13,10 @@ import {
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { ICartState, deleteCart } from '../../Slices/cartSlice';
-import _, { size } from 'lodash';
 import { COLORS, SIZES } from '../../constants';
 import { IProductCart } from '../../Interfaces/IProducts';
 import CartProductCard from '../../components/CartProductCard';
 import { useNavigation } from 'expo-router';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { Feather } from '@expo/vector-icons';
 import EmptyCart from '../../components/EmptyCart';
 import CartAnimation from '../../components/CartAnimation';
@@ -27,14 +24,13 @@ import { IUser } from '../../Interfaces/IUser';
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import CardDetailsModal from '../../components/CardDetailsModal';
+import useCalcBodyHeight from '../../Hooks/useCalcBodyHeight';
 
 const Cart = () => {
   const cart = useSelector((state: { cart: ICartState }) => state.cart);
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const windowHeight = Dimensions.get('window').height;
-  const headerHeight = useHeaderHeight();
-  const viewHeight = windowHeight - 120 - headerHeight;
+  const viewHeight = useCalcBodyHeight(120);
   const [user, setUser] = useState<IUser>({ name: '', email: '' });
   const { getItem } = useAsyncStorage('loggedUser');
   const [showAnimation, setShowAnimation] = useState(false);
@@ -76,14 +72,8 @@ const Cart = () => {
     ),
     []
   );
-  if (showAnimation)
-    return (
-      <CartAnimation headerHeight={headerHeight} windowHeight={windowHeight} />
-    );
-  if (!size(cart.products))
-    return (
-      <EmptyCart headerHeight={headerHeight} windowHeight={windowHeight} />
-    );
+  if (showAnimation) return <CartAnimation />;
+  if (cart.products.length === 0) return <EmptyCart />;
 
   return (
     <View style={{ backgroundColor: COLORS.darkerPrimary }}>
@@ -171,3 +161,6 @@ const styles = StyleSheet.create({
 });
 
 export default Cart;
+
+//TODO: creare un custom hook per altezza
+//TODO: poter salvare e selezionare carta
