@@ -2,15 +2,12 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import LottieView from 'lottie-react-native';
+import useCalcBodyHeight from '../../Hooks/useCalcBodyHeight';
 
-type CartAnimationProps = {
-  windowHeight: number;
-  headerHeight: number;
-};
-
-const CartAnimation = ({ windowHeight, headerHeight }: CartAnimationProps) => {
+const CartAnimation = () => {
+  const bodyHeight = useCalcBodyHeight(0);
   return (
-    <View style={[styles.container, { height: windowHeight - headerHeight }]}>
+    <View style={[styles.container, { height: bodyHeight }]}>
       <Text style={styles.textStyle}>Your order has been sent</Text>
       <Text style={styles.textStyle}>redirecting you to the Homepage</Text>
       <LottieView

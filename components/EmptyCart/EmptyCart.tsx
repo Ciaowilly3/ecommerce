@@ -2,15 +2,12 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import { router } from 'expo-router';
+import useCalcBodyHeight from '../../Hooks/useCalcBodyHeight';
 
-type EmptyCartProps = {
-  windowHeight: number;
-  headerHeight: number;
-};
-
-const EmptyCart = ({ headerHeight, windowHeight }: EmptyCartProps) => {
+const EmptyCart = () => {
+  const bodyHeight = useCalcBodyHeight(0);
   return (
-    <View style={[styles.container, { height: windowHeight - headerHeight }]}>
+    <View style={[styles.container, { height: bodyHeight }]}>
       <View style={styles.textContainer}>
         <Text>Your cart is empty, discover some of our </Text>
         <TouchableOpacity
