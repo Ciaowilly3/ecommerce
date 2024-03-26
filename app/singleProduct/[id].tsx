@@ -24,6 +24,7 @@ import { IProduct } from '../../Interfaces/IProducts';
 import Spinner from '../../components/Spinner';
 import Rating from '../../components/Rating';
 import useCalcBodyHeight from '../../Hooks/useCalcBodyHeight';
+import CartTotalBubble from '../../components/CartTotalBubble';
 
 const SingleProductPage = () => {
   const dispatch = useDispatch();
@@ -50,12 +51,13 @@ const SingleProductPage = () => {
       title: 'Product',
       headerRight: () => (
         <TouchableOpacity
-          style={{ paddingRight: 20 }}
+          style={{ paddingRight: 8 }}
           onPress={() => {
             navigation.navigate('cart/index' as never);
           }}
         >
           <Feather name="shopping-bag" size={24} color={COLORS.darkerPrimary} />
+          <CartTotalBubble />
         </TouchableOpacity>
       ),
     });
