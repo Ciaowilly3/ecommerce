@@ -15,6 +15,7 @@ const AccountActions = ({ handleVisibility, user }: IAccountActionsProps) => {
 
   const handleLogout = async () => {
     await removeItem();
+    handleVisibility('logout');
   };
 
   return (
