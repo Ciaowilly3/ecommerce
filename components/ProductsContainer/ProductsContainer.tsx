@@ -27,15 +27,12 @@ const ProductsContainer = ({
     ({ item }: { item: IProduct }) => (
       <ProductCard key={item.id} product={item} />
     ),
-    [data?.products]
+    []
   );
 
-  const handleFilter = useCallback(
-    (filter: string) => {
-      setFilter(filter);
-    },
-    [filter]
-  );
+  const handleFilter = useCallback((filter: string) => {
+    setFilter(filter);
+  }, []);
 
   if (isError) return <Text>An error occured</Text>;
   if (isFetching) return <Spinner />;

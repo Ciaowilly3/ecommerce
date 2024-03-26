@@ -15,7 +15,7 @@ const ProductCard = ({ product }: IProductCardProps) => {
       pathname: 'singleProduct/[id]',
       params: { id: product.id },
     });
-  }, []);
+  }, [product.id]);
 
   return (
     <TouchableOpacity onPress={() => navigateToSingleProduct()}>
