@@ -14,6 +14,7 @@ const SigninForm = ({ handleVisibility }: Props) => {
   const [user, setUser] = useState<IUserComplete>({
     name: '',
     email: '',
+    creditCards: [],
     password: '',
     confirmPassword: '',
   });

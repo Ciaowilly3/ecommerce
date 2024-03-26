@@ -11,7 +11,11 @@ type Props = {
 };
 
 const LoginForm = ({ handleVisibility }: Props) => {
-  const [user, setUser] = useState<IUser>({ name: '', email: '' });
+  const [user, setUser] = useState<IUser>({
+    name: '',
+    email: '',
+    creditCards: [],
+  });
   const [error, setError] = useState<boolean>(false);
 
   const handleBlur = useCallback((input: string, field: 'name' | 'email') => {

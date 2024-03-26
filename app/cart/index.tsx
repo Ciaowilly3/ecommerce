@@ -31,7 +31,11 @@ const Cart = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const viewHeight = useCalcBodyHeight(120);
-  const [user, setUser] = useState<IUser>({ name: '', email: '' });
+  const [user, setUser] = useState<IUser>({
+    name: '',
+    email: '',
+    creditCards: [],
+  });
   const { getItem } = useAsyncStorage('loggedUser');
   const [showAnimation, setShowAnimation] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -39,7 +43,7 @@ const Cart = () => {
   const retrieveItemFromAsyncStorage = useCallback(async () => {
     const item = await getItem();
     if (!item) {
-      setUser({ name: '', email: '' });
+      setUser({ name: '', email: '', creditCards: [] });
       return;
     }
     setUser(JSON.parse(item));
@@ -81,6 +85,7 @@ const Cart = () => {
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         setShowAnimation={setShowAnimation}
+        user={user}
       />
       <View style={[styles.fullPageView, { height: viewHeight }]}>
         <Text>Your cart</Text>
