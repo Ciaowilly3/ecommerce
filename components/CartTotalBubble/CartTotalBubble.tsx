@@ -5,15 +5,19 @@ import { StyleSheet, Text, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 
 const CartTotalBubble = () => {
-  const cart = useSelector((state: { cart: ICartState }) => state.cart);
-  const total = useMemo(() => {
-    let total = 0;
-    cart.products.forEach((product) => (total += product.quantity));
-    return total;
-  }, [cart.products]);
+  const { products } = useSelector((state: { cart: ICartState }) => state.cart);
+
+  const total = useMemo(
+    () =>
+      products.reduce(
+        (totalQuantity, product) => totalQuantity + product.quantity,
+        0
+      ),
+    [products]
+  );
   return (
     <View style={styles.container}>
-      <Text style={styles.number}>{total < 10 ? total.toString() : '9+'}</Text>
+      <Text style={styles.number}>{total < 10 ? `${total}` : '9+'}</Text>
     </View>
   );
 };
