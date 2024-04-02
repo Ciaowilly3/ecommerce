@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import { Feather, FontAwesome5 } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -32,17 +32,16 @@ const CardDetailsModal = ({
   const dispatch = useDispatch();
 
   const handleSubmit = useCallback(async () => {
+    let noWayToAuth = false;
     setCreditCard({ cardNumber: '', expDate: '' });
     if (!hasFaceID) return;
     const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-    if (!isEnrolled) throw new Error('no faceID available');
+    if (!isEnrolled) noWayToAuth = true;
 
     const { success } = await LocalAuthentication.authenticateAsync({
       requireConfirmation: true,
     });
-    if (!success) {
-      return;
-    } else {
+    if (success || noWayToAuth) {
       setIsModalVisible(false);
       dispatch(deleteCart());
       setShowAnimation(true);
