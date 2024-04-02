@@ -14,6 +14,7 @@ const InputText = ({ onBlurFn, placeholder, isPassword }: InputTextProps) => {
   return (
     <View style={styles.inputContainer}>
       <TextInput
+        placeholderTextColor={COLORS.primary}
         style={styles.textInput}
         value={searchedName}
         onChangeText={setSearchedName}

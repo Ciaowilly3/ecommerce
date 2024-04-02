@@ -3,16 +3,23 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import InputText from '../InputText';
 import { IUser } from '../../Interfaces/IUser';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import { saveUser } from '../../Slices/userSlice';
 
 type Props = {
   handleVisibility: () => void;
 };
 
 const LoginForm = ({ handleVisibility }: Props) => {
-  const [user, setUser] = useState<IUser>({ name: '', email: '' });
-  const [error, setError] = useState<boolean>(false);
+  const [user, setUser] = useState<IUser>({
+    name: '',
+    email: '',
+    creditCards: [],
+  });
+  const dispatch = useDispatch();
+  const { setItem } = useAsyncStorage('loggeduser');
 
   const handleBlur = useCallback((input: string, field: 'name' | 'email') => {
     setUser((prevUser) => ({
@@ -21,15 +28,10 @@ const LoginForm = ({ handleVisibility }: Props) => {
     }));
   }, []);
   const handleSubmit = useCallback(async () => {
-    try {
-      await AsyncStorage.setItem('loggedUser', JSON.stringify(user));
-      handleVisibility();
-    } catch (e) {
-      setError(true);
-    }
-  }, [handleVisibility, user]);
-
-  if (error) return <Text>Uuups we had an error</Text>;
+    await setItem(JSON.stringify(user));
+    dispatch(saveUser(user));
+    handleVisibility();
+  }, [setItem, user, dispatch, handleVisibility]);
 
   return (
     <>

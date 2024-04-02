@@ -1,43 +1,23 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import LogSignInFormModal from '../../../components/LogSignInFormModal';
-import { IUser } from '../../../Interfaces/IUser';
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { COLORS, SIZES } from '../../../constants';
 import AccountActions from '../../../components/AccountActions';
 import AccountDetails from '../../../components/AccountDetails';
+import { useSelector } from 'react-redux';
+import { IUserState } from '../../../Slices/userSlice';
 
 const UserPage = () => {
   const [isLoginForm, setIsLoginForm] = useState<boolean>(true);
-  const [user, setUser] = useState<IUser>({ name: '', email: '' });
-  const { getItem } = useAsyncStorage('loggedUser');
+  const { user } = useSelector((state: { user: IUserState }) => state.user);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-  const getCurrentlyLoggedUser = useCallback(async () => {
-    const jsonUser = await getItem();
-    if (!jsonUser) {
-      setUser({ name: '', email: '' });
-      return;
-    }
-    setUser(JSON.parse(jsonUser));
-  }, [getItem]);
   const handleVisibility = useCallback(
     (action?: 'signin' | 'login' | 'logout') => {
-      if (action === 'logout') {
-        getCurrentlyLoggedUser();
-        return;
-      }
       action === 'signin' ? setIsLoginForm(false) : setIsLoginForm(true);
       setIsModalVisible((prev) => !prev);
-      getCurrentlyLoggedUser();
     },
-    [getCurrentlyLoggedUser]
-  );
-  useEffect(() => {
-    getCurrentlyLoggedUser();
-  }, [getCurrentlyLoggedUser]);
-
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(
-    user ? false : true
+    []
   );
 
   return (
@@ -82,6 +62,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   noAccountText: {
+    paddingTop: SIZES.xSmall,
     textAlign: 'center',
     fontSize: SIZES.medium,
     fontWeight: 'bold',

@@ -54,7 +54,7 @@ const Discover = () => {
   if (isFetching) return <Spinner />;
   if (isError) return <Text>An error occured</Text>;
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TouchableOpacity
         onPress={handleModalVisibility}
         style={styles.selectButtonStyle}
@@ -70,7 +70,7 @@ const Discover = () => {
       </TouchableOpacity>
 
       <Modal visible={isModalVisible} animationType="slide">
-        <SafeAreaView style={styles.modalContainer}>
+        <View style={styles.modalContainer}>
           <TouchableOpacity
             onPress={handleModalVisibility}
             style={styles.closeButtonStyle}
@@ -82,10 +82,10 @@ const Discover = () => {
             renderItem={renderCategoryItem}
             keyExtractor={(item) => item.toString()}
           />
-        </SafeAreaView>
+        </View>
       </Modal>
       <DiscoverProductsContainer category={selectedCategory} />
-    </View>
+    </SafeAreaView>
   );
 };
 

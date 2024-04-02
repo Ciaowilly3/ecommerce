@@ -1,8 +1,10 @@
 import React, { useCallback } from 'react';
-import { SafeAreaView, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import CartTotalBubble from '../CartTotalBubble';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MainHeader = () => {
   const navigateToCart = useCallback(() => {
@@ -11,21 +13,13 @@ const MainHeader = () => {
   const navigateToHome = useCallback(() => {
     router.navigate('');
   }, []);
+
   return (
-    <SafeAreaView
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingLeft: SIZES.small,
-        paddingRight: SIZES.small,
-        marginBottom: SIZES.xSmall,
-      }}
-    >
-      <Text style={{ flexBasis: 33.3 }}></Text>
+    <SafeAreaView style={styles.mainContainer}>
+      <Text style={styles.btnContainer}></Text>
 
       <TouchableOpacity
-        style={{ flexBasis: 33.3 }}
+        style={styles.btnContainer}
         onPress={() => navigateToHome()}
       >
         <Ionicons
@@ -36,13 +30,31 @@ const MainHeader = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={{ flexBasis: 33.3, justifyContent: 'center' }}
+        style={styles.btnContainer}
         onPress={() => navigateToCart()}
       >
         <Feather name="shopping-bag" size={24} color={COLORS.darkerPrimary} />
+        <CartTotalBubble />
       </TouchableOpacity>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: SIZES.xSmall,
+    marginBottom: SIZES.xSmall,
+  },
+  btnContainer: {
+    flexBasis: 33.3,
+    justifyContent: 'center',
+  },
+});
+
+//TODO: validazione con ZOD
+//TODO: cambio password e email
 
 export default MainHeader;

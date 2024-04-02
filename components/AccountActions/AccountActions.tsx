@@ -3,6 +3,8 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { IUser } from '../../Interfaces/IUser';
+import { useDispatch } from 'react-redux';
+import { removeUser } from '../../Slices/userSlice';
 
 interface IAccountActionsProps {
   handleVisibility: (action?: 'signin' | 'login' | 'logout') => void;
@@ -10,11 +12,13 @@ interface IAccountActionsProps {
 }
 const AccountActions = ({ handleVisibility, user }: IAccountActionsProps) => {
   const { removeItem } = useAsyncStorage('loggedUser');
+  const dispatch = useDispatch();
 
   const name = useMemo(() => user.name, [user]);
 
   const handleLogout = async () => {
     await removeItem();
+    dispatch(removeUser());
   };
 
   return (
