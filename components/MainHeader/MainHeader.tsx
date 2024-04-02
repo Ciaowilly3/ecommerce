@@ -1,15 +1,10 @@
 import React, { useCallback } from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import CartTotalBubble from '../CartTotalBubble';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MainHeader = () => {
   const navigateToCart = useCallback(() => {
@@ -18,8 +13,9 @@ const MainHeader = () => {
   const navigateToHome = useCallback(() => {
     router.navigate('');
   }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.mainContainer}>
       <Text style={styles.btnContainer}></Text>
 
       <TouchableOpacity
@@ -45,12 +41,11 @@ const MainHeader = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingLeft: SIZES.small,
-    paddingRight: SIZES.small,
+    paddingHorizontal: SIZES.xSmall,
     marginBottom: SIZES.xSmall,
   },
   btnContainer: {
@@ -59,7 +54,7 @@ const styles = StyleSheet.create({
   },
 });
 
-//TODO: pallino numuero prodotti su carrello
-//TODO: da account passare ad uno screen diverso con carte di credito senza tabs con header
+//TODO: validazione con ZOD
+//TODO: cambio password e email
 
 export default MainHeader;
