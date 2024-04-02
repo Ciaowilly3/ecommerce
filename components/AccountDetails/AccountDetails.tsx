@@ -1,6 +1,13 @@
 import React, { useCallback } from 'react';
 import { IUser } from '../../Interfaces/IUser';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -10,10 +17,28 @@ interface IAccountDetailsProps {
 }
 
 const AccountDetails = ({ user }: IAccountDetailsProps) => {
-  const navigateToCreditCards = useCallback(() => {
-    router.navigate('creditCards');
+  const buttons = ['creditCards'];
+
+  const navigateTo = useCallback((destination: string) => {
+    router.navigate(destination);
   }, []);
 
+  const renderButton = useCallback(
+    ({ item }: { item: string }) => (
+      <TouchableOpacity
+        onPress={() => navigateTo(item)}
+        style={styles.btnStyle}
+      >
+        <Text style={styles.title}>Manage your payment methods</Text>
+        <FontAwesome5
+          name="credit-card"
+          size={18}
+          color={COLORS.darkerPrimary}
+        />
+      </TouchableOpacity>
+    ),
+    [navigateTo]
+  );
   return (
     <>
       <View style={styles.mainContainer}>
@@ -32,17 +57,7 @@ const AccountDetails = ({ user }: IAccountDetailsProps) => {
         </View>
       </View>
 
-      <TouchableOpacity
-        onPress={() => navigateToCreditCards()}
-        style={styles.btnStyle}
-      >
-        <Text style={styles.title}>Manage your payment methods</Text>
-        <FontAwesome5
-          name="credit-card"
-          size={18}
-          color={COLORS.darkerPrimary}
-        />
-      </TouchableOpacity>
+      <FlatList data={buttons} renderItem={renderButton} />
     </>
   );
 };
@@ -50,14 +65,23 @@ const AccountDetails = ({ user }: IAccountDetailsProps) => {
 const styles = StyleSheet.create({
   btnStyle: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    padding: SIZES.xSmall,
+    alignItems: 'center',
+    gap: SIZES.xSmall,
+    backgroundColor: COLORS.secondary,
+    borderWidth: 1,
+    borderColor: COLORS.darkerPrimary,
+    borderRadius: SIZES.xSmall,
+    shadowColor: COLORS.darkerPrimary,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 0 },
+    marginTop: SIZES.xxLarge,
   },
   title: {
     fontSize: SIZES.medium,
     fontWeight: 'bold',
     color: COLORS.darkerPrimary,
-    marginBottom: SIZES.xSmall,
-    alignSelf: 'flex-end',
   },
   mainContainer: {
     flexDirection: 'row',

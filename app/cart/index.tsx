@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -20,38 +15,20 @@ import { useNavigation } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import EmptyCart from '../../components/EmptyCart';
 import CartAnimation from '../../components/CartAnimation';
-import { IUser } from '../../Interfaces/IUser';
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import CardDetailsModal from '../../components/CardDetailsModal';
 import useCalcBodyHeight from '../../Hooks/useCalcBodyHeight';
+import { IUserState } from '../../Slices/userSlice';
 
 const Cart = () => {
   const cart = useSelector((state: { cart: ICartState }) => state.cart);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const viewHeight = useCalcBodyHeight(120);
-  const [user, setUser] = useState<IUser>({
-    name: '',
-    email: '',
-    creditCards: [],
-  });
-  const { getItem } = useAsyncStorage('loggedUser');
+  const { user } = useSelector((state: { user: IUserState }) => state.user);
   const [showAnimation, setShowAnimation] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const retrieveItemFromAsyncStorage = useCallback(async () => {
-    const item = await getItem();
-    if (!item) {
-      setUser({ name: '', email: '', creditCards: [] });
-      return;
-    }
-    setUser(JSON.parse(item));
-  }, [getItem]);
-
-  useEffect(() => {
-    retrieveItemFromAsyncStorage();
-  }, [retrieveItemFromAsyncStorage]);
   const handlePurchase = useCallback(async () => {
     if (!user.name) {
       Toast.show({
@@ -76,6 +53,7 @@ const Cart = () => {
     ),
     []
   );
+
   if (showAnimation) return <CartAnimation />;
   if (cart.products.length === 0) return <EmptyCart />;
 
@@ -166,6 +144,3 @@ const styles = StyleSheet.create({
 });
 
 export default Cart;
-
-//TODO: creare un custom hook per altezza
-//TODO: poter salvare e selezionare carta

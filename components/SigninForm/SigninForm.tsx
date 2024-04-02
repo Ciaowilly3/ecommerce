@@ -3,8 +3,10 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import InputText from '../InputText';
 import { IUserComplete } from '../../Interfaces/IUser';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import { saveUser } from '../../Slices/userSlice';
 
 type Props = {
   handleVisibility: () => void;
@@ -18,7 +20,8 @@ const SigninForm = ({ handleVisibility }: Props) => {
     password: '',
     confirmPassword: '',
   });
-  const [error, setError] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const { setItem } = useAsyncStorage('loggedUser');
 
   const handleBlur = useCallback(
     (
@@ -33,15 +36,11 @@ const SigninForm = ({ handleVisibility }: Props) => {
     []
   );
   const handleSubmit = useCallback(async () => {
-    try {
-      await AsyncStorage.setItem('loggedUser', JSON.stringify(user));
-      handleVisibility();
-    } catch (e) {
-      setError(true);
-    }
-  }, [handleVisibility, user]);
+    setItem(JSON.stringify(user));
+    dispatch(saveUser(user));
+    handleVisibility();
+  }, [handleVisibility, user, setItem, dispatch]);
 
-  if (error) return <Text>Uuups we had an error</Text>;
   return (
     <>
       <InputText

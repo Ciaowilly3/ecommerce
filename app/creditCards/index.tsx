@@ -1,4 +1,4 @@
-import { Feather, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CreditCardForm from '../../components/CreditCardForm';
@@ -6,24 +6,21 @@ import CreditCardsList from '../../components/CreditCardsList';
 import { ICreditCard, IUser } from '../../Interfaces/IUser';
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { COLORS, SIZES } from '../../constants';
-import { useMount } from 'ahooks';
-import CartTotalBubble from '../../components/CartTotalBubble';
 import { useNavigation } from 'expo-router';
-import useCalcBodyHeight from '../../Hooks/useCalcBodyHeight';
+import { useSelector } from 'react-redux';
+import { IUserState, addCreditCard } from '../../Slices/userSlice';
+import { useDispatch } from 'react-redux';
 
 const CreditCards = () => {
   const navigation = useNavigation();
-  const [user, setUser] = useState<IUser>({
-    creditCards: [],
-    email: '',
-    name: '',
-  });
+  const { user } = useSelector((state: { user: IUserState }) => state.user);
+  const dispatch = useDispatch();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [card, setCard] = useState<ICreditCard>({
     cardNumber: '',
     expDate: '',
   });
-  const { setItem, getItem } = useAsyncStorage('loggedUser');
+  const { setItem } = useAsyncStorage('loggedUser');
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -31,16 +28,11 @@ const CreditCards = () => {
     });
   }, [navigation]);
 
-  useMount(async () => {
-    const json = await getItem();
-    setUser(json ? JSON.parse(json) : { name: '', creditCards: [], email: '' });
-  });
-
   const handleSubmit = useCallback(async () => {
-    user.creditCards = [...user.creditCards, card];
+    dispatch(addCreditCard(card));
     await setItem(JSON.stringify(user));
     setIsModalVisible(false);
-  }, [card, setItem, user]);
+  }, [card, dispatch, setItem, user]);
 
   return (
     <>
@@ -70,7 +62,7 @@ const CreditCards = () => {
           </TouchableOpacity>
         </View>
 
-        <CreditCardsList />
+        <CreditCardsList user={user} />
       </View>
     </>
   );
