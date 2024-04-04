@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import InputText from '../InputText';
 import { IUserComplete } from '../../Interfaces/IUser';
@@ -70,7 +70,6 @@ const SigninForm = ({ handleVisibility }: Props) => {
     [checkIfSubmitReady]
   );
 
-  //TODO: X in alto a destra
   //TODO: creare custom hook per validate
 
   const handleBlur = useCallback(
@@ -94,6 +93,12 @@ const SigninForm = ({ handleVisibility }: Props) => {
 
   return (
     <>
+      <TouchableOpacity
+        onPress={handleVisibility}
+        style={styles.closeButtonStyle}
+      >
+        <FontAwesome5 name="times" size={18} color={COLORS.white} />
+      </TouchableOpacity>
       <InputText
         onBlurFn={(input) => handleBlur(input, 'name')}
         placeholder="name"
@@ -119,21 +124,13 @@ const SigninForm = ({ handleVisibility }: Props) => {
         isPassword={true}
         errorMessage={errors.confirmPassword}
       />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={handleSubmit}
-          style={styles.submitInput}
-          disabled={isSubmitDisabled}
-        >
-          <Text style={styles.submitInputText}>Submit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleVisibility}
-          style={styles.closeButtonStyle}
-        >
-          <FontAwesome5 name="times" size={18} color={COLORS.white} />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        onPress={handleSubmit}
+        style={styles.submitInput}
+        disabled={isSubmitDisabled}
+      >
+        <Text style={styles.submitInputText}>Submit</Text>
+      </TouchableOpacity>
     </>
   );
 };
@@ -152,14 +149,11 @@ const styles = StyleSheet.create({
     marginVertical: SIZES.small,
     padding: SIZES.small,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   submitInput: {
     width: 200,
     marginTop: SIZES.xSmall,
     alignItems: 'center',
+    alignSelf: 'flex-end',
     shadowColor: COLORS.darkerPrimary,
     shadowOpacity: 0.6,
     shadowOffset: { width: 3, height: 3 },
@@ -176,13 +170,16 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
   closeButtonStyle: {
+    position: 'absolute',
+    top: SIZES.medium,
+    right: SIZES.xSmall,
     flexDirection: 'row',
     alignSelf: 'flex-end',
     alignItems: 'center',
     justifyContent: 'center',
     width: 36,
     height: 36,
-    backgroundColor: COLORS.red,
+    backgroundColor: COLORS.primary,
     borderRadius: 18,
     shadowColor: COLORS.primary,
     shadowOpacity: 0.8,

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import InputText from '../InputText';
 import { IUser } from '../../Interfaces/IUser';
@@ -7,12 +7,7 @@ import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { saveUser } from '../../Slices/userSlice';
-import {
-  UserSchema,
-  emailMessage,
-  nameMessage,
-  passwordMessage,
-} from './schema';
+import { UserSchema } from './schema';
 import { ZodError, z } from 'zod';
 
 type LoginFormProps = {
@@ -94,6 +89,12 @@ const LoginForm = ({ handleVisibility }: LoginFormProps) => {
 
   return (
     <>
+      <TouchableOpacity
+        onPress={handleVisibility}
+        style={styles.closeButtonStyle}
+      >
+        <FontAwesome5 name="times" size={18} color={COLORS.white} />
+      </TouchableOpacity>
       <InputText
         onBlurFn={(input) => handleBlur(input, 'name')}
         placeholder={'name'}
@@ -111,21 +112,13 @@ const LoginForm = ({ handleVisibility }: LoginFormProps) => {
         errorMessage={errors.password}
       />
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={handleSubmit}
-          style={styles.submitInput}
-          disabled={isSubmitDisabled}
-        >
-          <Text style={styles.submitInputText}>Submit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleVisibility}
-          style={styles.closeButtonStyle}
-        >
-          <FontAwesome5 name="times" size={18} color={COLORS.white} />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        onPress={handleSubmit}
+        style={styles.submitInput}
+        disabled={isSubmitDisabled}
+      >
+        <Text style={styles.submitInputText}>Submit</Text>
+      </TouchableOpacity>
     </>
   );
 };
@@ -144,12 +137,11 @@ const styles = StyleSheet.create({
     marginVertical: SIZES.small,
     padding: SIZES.small,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
+
   submitInput: {
     width: 200,
+    alignSelf: 'flex-end',
+
     marginTop: SIZES.xSmall,
     alignItems: 'center',
     shadowColor: COLORS.darkerPrimary,
@@ -168,13 +160,16 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
   closeButtonStyle: {
+    position: 'absolute',
+    top: SIZES.medium,
+    right: SIZES.xSmall,
     flexDirection: 'row',
     alignSelf: 'flex-end',
     alignItems: 'center',
     justifyContent: 'center',
     width: 36,
     height: 36,
-    backgroundColor: COLORS.red,
+    backgroundColor: COLORS.primary,
     borderRadius: 18,
     shadowColor: COLORS.primary,
     shadowOpacity: 0.8,
