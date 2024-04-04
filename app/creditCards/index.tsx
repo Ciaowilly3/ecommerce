@@ -3,7 +3,7 @@ import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CreditCardForm from '../../components/CreditCardForm';
 import CreditCardsList from '../../components/CreditCardsList';
-import { ICreditCard, IUser } from '../../Interfaces/IUser';
+import { ICreditCard } from '../../Interfaces/IUser';
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { COLORS, SIZES } from '../../constants';
 import { useNavigation } from 'expo-router';
@@ -32,6 +32,7 @@ const CreditCards = () => {
     dispatch(addCreditCard(card));
     await setItem(JSON.stringify(user));
     setIsModalVisible(false);
+    setCard({ expDate: '', cardNumber: '' });
   }, [card, dispatch, setItem, user]);
 
   return (
