@@ -7,12 +7,15 @@ import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { saveUser } from '../../Slices/userSlice';
+import { UserSchema } from './schema';
+import { ZodError, z } from 'zod';
 
 type Props = {
   handleVisibility: () => void;
 };
 
 const SigninForm = ({ handleVisibility }: Props) => {
+  type UserSchemaKeys = keyof z.infer<typeof UserSchema>;
   const [user, setUser] = useState<IUserComplete>({
     name: '',
     email: '',
@@ -20,20 +23,68 @@ const SigninForm = ({ handleVisibility }: Props) => {
     password: '',
     confirmPassword: '',
   });
+  const [errors, setErrors] = useState<{ [key in UserSchemaKeys]: string }>({
+    email: '',
+    name: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const dispatch = useDispatch();
   const { setItem } = useAsyncStorage('loggedUser');
 
-  const handleBlur = useCallback(
-    (
-      input: string,
-      field: 'name' | 'email' | 'password' | 'confirmPassword'
-    ) => {
-      setUser((prevUser) => ({
-        ...prevUser,
-        [field]: input,
-      }));
+  const checkIfSubmitReady = useCallback(
+    (updatedErrors: { [key in UserSchemaKeys]: string }) => {
+      if (
+        !updatedErrors.email &&
+        !updatedErrors.name &&
+        !updatedErrors.password
+      )
+        setIsSubmitDisabled(false);
+      else setIsSubmitDisabled(true);
     },
     []
+  );
+
+  const validate = useCallback(
+    (field: UserSchemaKeys, updatedUser: IUserComplete) => {
+      try {
+        UserSchema.parse(updatedUser);
+        setErrors((prevErrors) => {
+          const updatedErrors = { ...prevErrors, [field]: '' };
+          checkIfSubmitReady(updatedErrors);
+          return updatedErrors;
+        });
+      } catch (error) {
+        const myError = error as ZodError;
+        const message = myError.errors
+          .filter((error) => error.path[0] === field)
+          .map((error) => error.message);
+        setErrors((prevErrors) => {
+          const updatedErrors = { ...prevErrors, [field]: message[0] };
+          checkIfSubmitReady(updatedErrors);
+          return updatedErrors;
+        });
+      }
+    },
+    [checkIfSubmitReady]
+  );
+
+  //TODO: X in alto a destra
+  //TODO: creare custom hook per validate
+
+  const handleBlur = useCallback(
+    (input: string, field: UserSchemaKeys) => {
+      setUser((prevUser) => {
+        const updatedUser = {
+          ...prevUser,
+          [field]: input,
+        };
+        validate(field, updatedUser);
+        return updatedUser;
+      });
+    },
+    [validate]
   );
   const handleSubmit = useCallback(async () => {
     setItem(JSON.stringify(user));
@@ -45,29 +96,34 @@ const SigninForm = ({ handleVisibility }: Props) => {
     <>
       <InputText
         onBlurFn={(input) => handleBlur(input, 'name')}
-        placeholder="Name"
+        placeholder="name"
+        errorMessage={errors.name}
       />
+
       <InputText
         onBlurFn={(input) => handleBlur(input, 'email')}
         placeholder="email"
+        errorMessage={errors.email}
       />
+
       <InputText
         onBlurFn={(input) => handleBlur(input, 'password')}
         placeholder="password"
         isPassword={true}
+        errorMessage={errors.password}
       />
+
       <InputText
         onBlurFn={(input) => handleBlur(input, 'confirmPassword')}
         placeholder="confirm-password"
         isPassword={true}
+        errorMessage={errors.confirmPassword}
       />
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={handleSubmit}
           style={styles.submitInput}
-          disabled={
-            !(user.name && user.password && user.email && user.confirmPassword)
-          }
+          disabled={isSubmitDisabled}
         >
           <Text style={styles.submitInputText}>Submit</Text>
         </TouchableOpacity>

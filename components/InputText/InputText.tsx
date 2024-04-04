@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 
 type InputTextProps = {
   onBlurFn: (text: string) => void;
   placeholder: string;
   isPassword?: boolean;
+  errorMessage?: string;
 };
 
-const InputText = ({ onBlurFn, placeholder, isPassword }: InputTextProps) => {
+const InputText = ({
+  onBlurFn,
+  placeholder,
+  isPassword,
+  errorMessage,
+}: InputTextProps) => {
   const [searchedName, setSearchedName] = useState<string>('');
 
   return (
-    <View style={styles.inputContainer}>
+    <>
       <TextInput
         placeholderTextColor={COLORS.primary}
         style={styles.textInput}
@@ -22,12 +28,17 @@ const InputText = ({ onBlurFn, placeholder, isPassword }: InputTextProps) => {
         placeholder={placeholder}
         secureTextEntry={isPassword}
       />
-    </View>
+      {errorMessage ? (
+        <Text style={styles.errorMessage}>{errorMessage}</Text>
+      ) : null}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {},
+  errorMessage: {
+    color: COLORS.red,
+  },
   textInput: {
     shadowColor: COLORS.primary,
     shadowOpacity: 1,

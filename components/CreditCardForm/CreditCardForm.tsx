@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ICreditCard } from '../../Interfaces/IUser';
 import {
   Image,
@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { CardSchema, cardNumberMessage, expDateMessage } from './schema';
+import { ZodError, z } from 'zod';
 
 interface CreditCardFormProps {
   handleSubmit: () => void;
@@ -22,16 +24,58 @@ const CreditCardForm = ({
   card,
   setCard,
 }: CreditCardFormProps) => {
-  const isDisabled: boolean = card.cardNumber.length !== 16 || !card.expDate;
+  type cardSchemaKeys = keyof z.infer<typeof CardSchema>;
+  const [errors, setErrors] = useState<{ [key in cardSchemaKeys]: string }>({
+    cardNumber: '',
+    expDate: '',
+  });
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+  const checkIfSubmitReady = useCallback(
+    (updatedErrors: { [key in cardSchemaKeys]: string }) => {
+      if (!updatedErrors.cardNumber && !updatedErrors.expDate)
+        setIsSubmitDisabled(false);
+      else setIsSubmitDisabled(true);
+    },
+    []
+  );
+
+  const validate = useCallback(
+    (field: cardSchemaKeys, updatedUser: ICreditCard) => {
+      try {
+        CardSchema.parse(updatedUser);
+        setErrors((prevErrors) => {
+          const updatedErrors = { ...prevErrors, [field]: '' };
+          checkIfSubmitReady(updatedErrors);
+          return updatedErrors;
+        });
+      } catch (error) {
+        const myError = error as ZodError;
+        const message = myError.errors
+          .filter((error) => error.path[0] === field)
+          .map((error) => error.message);
+        setErrors((prevErrors) => {
+          const updatedErrors = { ...prevErrors, [field]: message[0] };
+          checkIfSubmitReady(updatedErrors);
+          return updatedErrors;
+        });
+      }
+    },
+    [checkIfSubmitReady]
+  );
 
   const handleChange = useCallback(
-    (input: string, field: 'cardNumber' | 'expDate') => {
-      setCard((prevCard) => ({
-        ...prevCard,
-        [field]: input,
-      }));
+    (input: string, field: cardSchemaKeys) => {
+      setCard((prevCard) => {
+        const updatedCard = {
+          ...prevCard,
+          [field]: input,
+        };
+        validate(field, updatedCard);
+        return updatedCard;
+      });
     },
-    [setCard]
+    [setCard, validate]
   );
 
   return (
@@ -91,16 +135,24 @@ const CreditCardForm = ({
             placeholder="Insert date"
             value={card.expDate}
             style={styles.expirationDate}
+            maxLength={5}
           ></TextInput>
         </View>
         <View>
           <Text style={styles.iban}>IT 12 A 12345 12345 123456789012</Text>
         </View>
       </View>
+      {errors.cardNumber ? (
+        <Text style={styles.errorMessage}>{errors.cardNumber}</Text>
+      ) : null}
+      {errors.expDate ? (
+        <Text style={styles.errorMessage}>{errors.expDate}</Text>
+      ) : null}
+
       <TouchableOpacity
         onPress={handleSubmit}
         style={styles.submitInput}
-        disabled={isDisabled}
+        disabled={isSubmitDisabled}
       >
         <Text style={styles.submitInputText}>Submit</Text>
       </TouchableOpacity>
@@ -109,6 +161,11 @@ const CreditCardForm = ({
 };
 
 const styles = StyleSheet.create({
+  errorMessage: {
+    color: COLORS.red,
+    alignSelf: 'flex-start',
+    paddingLeft: SIZES.xSmall,
+  },
   mastercardLogo: {
     position: 'absolute',
     right: SIZES.medium,
