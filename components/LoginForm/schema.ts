@@ -13,3 +13,7 @@ export const UserSchema = z.object({
     .min(8, passwordMessage)
     .regex(passwordRegex, passwordMessage),
 });
+
+export type userSchemaKeys = keyof z.infer<typeof UserSchema>;
+
+export type loginSchemaType = typeof UserSchema;

@@ -7,16 +7,15 @@ import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { saveUser } from '../../Slices/userSlice';
-import { UserSchema } from './schema';
-import { ZodError, z } from 'zod';
+import { UserSchema, userSchemaKeys } from './schema';
 import { checkIfSubmitIsAvailable } from '../../utils/checkIfSubmitIsAvailable';
+import { useUserFormValidation } from '../../Hooks/useUserFormValidation';
 
 type Props = {
   handleVisibility: () => void;
 };
 
 const SigninForm = ({ handleVisibility }: Props) => {
-  type UserSchemaKeys = keyof z.infer<typeof UserSchema>;
   const [user, setUser] = useState<IUserComplete>({
     name: '',
     email: '',
@@ -24,7 +23,7 @@ const SigninForm = ({ handleVisibility }: Props) => {
     password: '',
     confirmPassword: '',
   });
-  const [errors, setErrors] = useState<{ [key in UserSchemaKeys]: string }>({
+  const [errors, setErrors] = useState<{ [key in userSchemaKeys]: string }>({
     email: '',
     name: '',
     password: '',
@@ -35,41 +34,20 @@ const SigninForm = ({ handleVisibility }: Props) => {
   const { setItem } = useAsyncStorage('loggedUser');
 
   const checkIfSubmitReady = useCallback(
-    (updatedErrors: { [key in UserSchemaKeys]: string }) => {
+    (updatedErrors: { [key in userSchemaKeys]: string }) => {
       if (checkIfSubmitIsAvailable(updatedErrors)) setIsSubmitDisabled(false);
       else setIsSubmitDisabled(true);
     },
     []
   );
-
-  const validate = useCallback(
-    (field: UserSchemaKeys, updatedUser: IUserComplete) => {
-      try {
-        UserSchema.parse(updatedUser);
-        setErrors((prevErrors) => {
-          const updatedErrors = { ...prevErrors, [field]: undefined };
-          checkIfSubmitReady(updatedErrors);
-          return updatedErrors;
-        });
-      } catch (error) {
-        const myError = error as ZodError;
-        const message = myError.errors
-          .filter((error) => error.path[0] === field)
-          .map((error) => error.message);
-        setErrors((prevErrors) => {
-          const updatedErrors = { ...prevErrors, [field]: message[0] };
-          checkIfSubmitReady(updatedErrors);
-          return updatedErrors;
-        });
-      }
-    },
-    [checkIfSubmitReady]
+  const { validate } = useUserFormValidation(
+    setErrors,
+    checkIfSubmitReady,
+    UserSchema
   );
 
-  //TODO: creare custom hook per validate
-
   const handleBlur = useCallback(
-    (input: string, field: UserSchemaKeys) => {
+    (input: string, field: userSchemaKeys) => {
       setUser((prevUser) => {
         const updatedUser = {
           ...prevUser,
