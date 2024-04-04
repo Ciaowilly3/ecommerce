@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { CardSchema, cardNumberMessage, expDateMessage } from './schema';
+import { CardSchema } from './schema';
 import { ZodError, z } from 'zod';
+import { checkIfSubmitIsAvailable } from '../../utils/checkIfSubmitIsAvailable';
 
 interface CreditCardFormProps {
   handleSubmit: () => void;
@@ -33,8 +34,7 @@ const CreditCardForm = ({
 
   const checkIfSubmitReady = useCallback(
     (updatedErrors: { [key in cardSchemaKeys]: string }) => {
-      if (!updatedErrors.cardNumber && !updatedErrors.expDate)
-        setIsSubmitDisabled(false);
+      if (checkIfSubmitIsAvailable(updatedErrors)) setIsSubmitDisabled(false);
       else setIsSubmitDisabled(true);
     },
     []
@@ -45,7 +45,7 @@ const CreditCardForm = ({
       try {
         CardSchema.parse(updatedUser);
         setErrors((prevErrors) => {
-          const updatedErrors = { ...prevErrors, [field]: '' };
+          const updatedErrors = { ...prevErrors, [field]: undefined };
           checkIfSubmitReady(updatedErrors);
           return updatedErrors;
         });

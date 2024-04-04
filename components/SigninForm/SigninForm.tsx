@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { saveUser } from '../../Slices/userSlice';
 import { UserSchema } from './schema';
 import { ZodError, z } from 'zod';
+import { checkIfSubmitIsAvailable } from '../../utils/checkIfSubmitIsAvailable';
 
 type Props = {
   handleVisibility: () => void;
@@ -35,12 +36,7 @@ const SigninForm = ({ handleVisibility }: Props) => {
 
   const checkIfSubmitReady = useCallback(
     (updatedErrors: { [key in UserSchemaKeys]: string }) => {
-      if (
-        !updatedErrors.email &&
-        !updatedErrors.name &&
-        !updatedErrors.password
-      )
-        setIsSubmitDisabled(false);
+      if (checkIfSubmitIsAvailable(updatedErrors)) setIsSubmitDisabled(false);
       else setIsSubmitDisabled(true);
     },
     []
@@ -51,7 +47,7 @@ const SigninForm = ({ handleVisibility }: Props) => {
       try {
         UserSchema.parse(updatedUser);
         setErrors((prevErrors) => {
-          const updatedErrors = { ...prevErrors, [field]: '' };
+          const updatedErrors = { ...prevErrors, [field]: undefined };
           checkIfSubmitReady(updatedErrors);
           return updatedErrors;
         });
