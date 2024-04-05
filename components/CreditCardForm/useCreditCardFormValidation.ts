@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { ZodError } from 'zod';
-import { CardSchema, cardSchemaKeys } from './schema';
+import { CardSchema, cardSchemaKeys } from './models/schema';
 import { ICreditCard } from '../../Interfaces/IUser';
 
 export const useCreditCardFormValidation = (

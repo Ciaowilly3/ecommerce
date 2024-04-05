@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { cardSchemaKeys } from './schema';
+import { cardSchemaKeys } from './models/schema';
 import { checkIfSubmitIsAvailable } from '../../utils/checkIfSubmitIsAvailable';
 import { useCreditCardFormValidation } from './useCreditCardFormValidation';
 
