@@ -7,16 +7,16 @@ import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { saveUser } from '../../Slices/userSlice';
-import { UserSchema } from './schema';
-import { ZodError, z } from 'zod';
+import { UserSchema, userSchemaKeys } from './schema';
+import { checkIfSubmitIsAvailable } from '../../utils/checkIfSubmitIsAvailable';
+import { useUserFormValidation } from '../../Hooks/useUserFormValidation';
 
 type LoginFormProps = {
   handleVisibility: () => void;
 };
 
 const LoginForm = ({ handleVisibility }: LoginFormProps) => {
-  type UserSchemaKeys = keyof z.infer<typeof UserSchema>;
-  const [errors, setErrors] = useState<{ [key in UserSchemaKeys]: string }>({
+  const [errors, setErrors] = useState<{ [key in userSchemaKeys]: string }>({
     email: '',
     name: '',
     password: '',
@@ -32,43 +32,20 @@ const LoginForm = ({ handleVisibility }: LoginFormProps) => {
   const { setItem } = useAsyncStorage('loggeduser');
 
   const checkIfSubmitReady = useCallback(
-    (updatedErrors: { [key in UserSchemaKeys]: string }) => {
-      if (
-        !updatedErrors.email &&
-        !updatedErrors.name &&
-        !updatedErrors.password
-      )
-        setIsSubmitDisabled(false);
+    (updatedErrors: { [key in userSchemaKeys]: string }) => {
+      if (checkIfSubmitIsAvailable(updatedErrors)) setIsSubmitDisabled(false);
       else setIsSubmitDisabled(true);
     },
     []
   );
-  const validate = useCallback(
-    (field: UserSchemaKeys, updatedUser: IUser & { password: string }) => {
-      try {
-        UserSchema.parse(updatedUser);
-        setErrors((prevErrors) => {
-          const updatedErrors = { ...prevErrors, [field]: '' };
-          checkIfSubmitReady(updatedErrors);
-          return updatedErrors;
-        });
-      } catch (error) {
-        const myError = error as ZodError;
-        const message = myError.errors
-          .filter((error) => error.path[0] === field)
-          .map((error) => error.message);
-        setErrors((prevErrors) => {
-          const updatedErrors = { ...prevErrors, [field]: message[0] };
-          checkIfSubmitReady(updatedErrors);
-          return updatedErrors;
-        });
-      }
-    },
-    [checkIfSubmitReady]
+  const { validate } = useUserFormValidation(
+    setErrors,
+    checkIfSubmitReady,
+    UserSchema
   );
 
   const handleBlur = useCallback(
-    (input: string, field: UserSchemaKeys) => {
+    (input: string, field: userSchemaKeys) => {
       setUser((prevUser) => {
         const updatedUser = {
           ...prevUser,
@@ -122,6 +99,7 @@ const LoginForm = ({ handleVisibility }: LoginFormProps) => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
   textInput: {
     shadowColor: COLORS.primary,
@@ -176,4 +154,5 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 1 },
   },
 });
+
 export default LoginForm;

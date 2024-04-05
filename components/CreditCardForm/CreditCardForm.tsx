@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { CardSchema, cardNumberMessage, expDateMessage } from './schema';
-import { ZodError, z } from 'zod';
+import { cardSchemaKeys } from './models/schema';
+import { checkIfSubmitIsAvailable } from '../../utils/checkIfSubmitIsAvailable';
+import { useCreditCardFormValidation } from './useCreditCardFormValidation';
 
 interface CreditCardFormProps {
   handleSubmit: () => void;
@@ -24,7 +25,6 @@ const CreditCardForm = ({
   card,
   setCard,
 }: CreditCardFormProps) => {
-  type cardSchemaKeys = keyof z.infer<typeof CardSchema>;
   const [errors, setErrors] = useState<{ [key in cardSchemaKeys]: string }>({
     cardNumber: '',
     expDate: '',
@@ -33,35 +33,14 @@ const CreditCardForm = ({
 
   const checkIfSubmitReady = useCallback(
     (updatedErrors: { [key in cardSchemaKeys]: string }) => {
-      if (!updatedErrors.cardNumber && !updatedErrors.expDate)
-        setIsSubmitDisabled(false);
+      if (checkIfSubmitIsAvailable(updatedErrors)) setIsSubmitDisabled(false);
       else setIsSubmitDisabled(true);
     },
     []
   );
-
-  const validate = useCallback(
-    (field: cardSchemaKeys, updatedUser: ICreditCard) => {
-      try {
-        CardSchema.parse(updatedUser);
-        setErrors((prevErrors) => {
-          const updatedErrors = { ...prevErrors, [field]: '' };
-          checkIfSubmitReady(updatedErrors);
-          return updatedErrors;
-        });
-      } catch (error) {
-        const myError = error as ZodError;
-        const message = myError.errors
-          .filter((error) => error.path[0] === field)
-          .map((error) => error.message);
-        setErrors((prevErrors) => {
-          const updatedErrors = { ...prevErrors, [field]: message[0] };
-          checkIfSubmitReady(updatedErrors);
-          return updatedErrors;
-        });
-      }
-    },
-    [checkIfSubmitReady]
+  const { validate } = useCreditCardFormValidation(
+    setErrors,
+    checkIfSubmitReady
   );
 
   const handleChange = useCallback(

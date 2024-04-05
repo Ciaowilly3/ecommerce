@@ -7,3 +7,5 @@ export const CardSchema = z.object({
   cardNumber: z.string().length(16, cardNumberMessage),
   expDate: z.string().regex(expDateRegex, expDateMessage),
 });
+
+export type cardSchemaKeys = keyof z.infer<typeof CardSchema>;
