@@ -39,13 +39,8 @@ const CreditCards = () => {
     <>
       <Modal visible={isModalVisible} animationType="slide">
         <View style={[styles.modalContainer]}>
-          <TouchableOpacity
-            onPress={() => setIsModalVisible((prev) => !prev)}
-            style={styles.closeButtonStyle}
-          >
-            <FontAwesome5 name="times" size={18} color={COLORS.white} />
-          </TouchableOpacity>
           <CreditCardForm
+            setIsModalVisible={setIsModalVisible}
             card={card}
             handleSubmit={handleSubmit}
             setCard={setCard}
@@ -57,7 +52,7 @@ const CreditCards = () => {
           <Text style={styles.title}>Your Credit cards</Text>
           <TouchableOpacity
             onPress={() => setIsModalVisible((prev) => !prev)}
-            style={styles.closeButtonStyle}
+            style={styles.addButtonStyle}
           >
             <FontAwesome5 name="plus" size={18} color={COLORS.white} />
           </TouchableOpacity>
@@ -91,7 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     paddingHorizontal: SIZES.xSmall,
   },
-  closeButtonStyle: {
+  addButtonStyle: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
