@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, View } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
-import { Feather, FontAwesome5 } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { deleteCart } from '../../Slices/cartSlice';
 import { useDispatch } from 'react-redux';
@@ -29,6 +29,8 @@ const CardDetailsModal = ({
     expDate: '',
   });
   const [hasFaceID, setHasFaceID] = useState<boolean>(true);
+  const [isCreditCardSelected, setIsCreditCardSelected] =
+    useState<boolean>(true);
   const dispatch = useDispatch();
 
   const handleSubmit = useCallback(async () => {
@@ -52,6 +54,11 @@ const CardDetailsModal = ({
     }
   }, [dispatch, setIsModalVisible, setShowAnimation, hasFaceID]);
 
+  const handleCardSelection = useCallback((selectedItem: ICreditCard) => {
+    setCreditCard(selectedItem);
+    setIsCreditCardSelected(true);
+  }, []);
+
   useEffect(() => {
     (async () => {
       const compatible = await LocalAuthentication.hasHardwareAsync();
@@ -66,7 +73,7 @@ const CardDetailsModal = ({
           {user.creditCards.length !== 0 && (
             <SelectDropdown
               data={user.creditCards}
-              onSelect={(selectedItem) => setCreditCard(selectedItem)}
+              onSelect={(selectedItem) => handleCardSelection(selectedItem)}
               renderDropdownIcon={() => (
                 <Feather name="chevron-down" size={SIZES.medium} />
               )}
@@ -85,17 +92,13 @@ const CardDetailsModal = ({
               defaultButtonText="Select a credit card"
             />
           )}
-          <TouchableOpacity
-            onPress={() => setIsModalVisible((prev) => !prev)}
-            style={styles.closeButtonStyle}
-          >
-            <FontAwesome5 name="times" size={18} color={COLORS.white} />
-          </TouchableOpacity>
         </View>
         <CreditCardForm
+          setIsModalVisible={setIsModalVisible}
           card={creditCard}
           handleSubmit={handleSubmit}
           setCard={setCreditCard}
+          isCreditCardSelected={isCreditCardSelected}
         />
       </View>
     </Modal>
@@ -121,20 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.secondary,
     borderRadius: SIZES.small,
     paddingLeft: SIZES.xSmall,
-  },
-  closeButtonStyle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'flex-end',
-    margin: SIZES.small,
-    width: 36,
-    height: 36,
-    backgroundColor: COLORS.darkerPrimary,
-    borderRadius: 18,
-    shadowColor: COLORS.primary,
-    shadowOpacity: 0.8,
-    shadowOffset: { width: 3, height: 1 },
+    marginBottom: -56,
   },
 });
 
