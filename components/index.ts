@@ -11,6 +11,7 @@ export { default as CreditCardForm } from './CreditCardForm';
 export { default as CreditCardsList } from './CreditCardsList';
 export { default as DiscoverProductsContainer } from './DiscoverProductsContainer';
 export { default as EmptyCart } from './EmptyCart';
+export { default as ExpDateList } from './ExpDateList';
 export { default as FilteredProductsContainer } from './FilteredProductsContainer';
 export { default as InputText } from './InputText';
 export { default as LoginForm } from './LoginForm';
