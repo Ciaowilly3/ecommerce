@@ -9,27 +9,37 @@ import {
   View,
 } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { cardSchemaKeys } from './models/schema';
 import { checkIfSubmitIsAvailable } from '../../utils/checkIfSubmitIsAvailable';
 import { useCreditCardFormValidation } from './useCreditCardFormValidation';
+import ExpDateList from '../ExpDateList';
+import { formatCardNumber } from './fromatCardNumber';
 
 interface CreditCardFormProps {
   handleSubmit: () => void;
   card: ICreditCard;
   setCard: (value: React.SetStateAction<ICreditCard>) => void;
+  setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  isCreditCardSelected?: boolean;
 }
 
 const CreditCardForm = ({
   handleSubmit,
   card,
   setCard,
+  isCreditCardSelected,
+  setIsModalVisible,
 }: CreditCardFormProps) => {
   const [errors, setErrors] = useState<{ [key in cardSchemaKeys]: string }>({
     cardNumber: '',
     expDate: '',
   });
-  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(
+    isCreditCardSelected ? false : true
+  );
+  const [isExpDateModalVisible, setIsExpDateModalVisible] =
+    useState<boolean>(false);
 
   const checkIfSubmitReady = useCallback(
     (updatedErrors: { [key in cardSchemaKeys]: string }) => {
@@ -46,6 +56,8 @@ const CreditCardForm = ({
   const handleChange = useCallback(
     (input: string, field: cardSchemaKeys) => {
       setCard((prevCard) => {
+        if (field === 'cardNumber' && input.length > prevCard.cardNumber.length)
+          input = formatCardNumber(input);
         const updatedCard = {
           ...prevCard,
           [field]: input,
@@ -59,6 +71,18 @@ const CreditCardForm = ({
 
   return (
     <>
+      {isExpDateModalVisible && (
+        <ExpDateList
+          setIsExpDateModalVisible={setIsExpDateModalVisible}
+          handleChange={handleChange}
+        />
+      )}
+      <TouchableOpacity
+        onPress={() => setIsModalVisible((prev) => !prev)}
+        style={styles.closeButtonStyle}
+      >
+        <FontAwesome5 name="times" size={18} color={COLORS.white} />
+      </TouchableOpacity>
       <View style={styles.cardContainer}>
         <Image
           source={{
@@ -99,8 +123,9 @@ const CreditCardForm = ({
             keyboardType="numeric"
             onChangeText={(text) => handleChange(text, 'cardNumber')}
             placeholder="Insert your card number..."
+            placeholderTextColor={COLORS.primary}
             value={card.cardNumber}
-            maxLength={16}
+            maxLength={19}
           />
         </View>
         <View style={styles.expirationContainer}>
@@ -108,14 +133,11 @@ const CreditCardForm = ({
             <Text style={styles.expirationText}>VALID</Text>
             <Text style={styles.expirationText}>THRU</Text>
           </View>
-          <TextInput
-            keyboardType="numbers-and-punctuation"
-            onChangeText={(text) => handleChange(text, 'expDate')}
-            placeholder="Insert date"
-            value={card.expDate}
-            style={styles.expirationDate}
-            maxLength={5}
-          ></TextInput>
+          <TouchableOpacity onPress={() => setIsExpDateModalVisible(true)}>
+            <Text style={styles.expirationDate}>
+              {card.expDate ? card.expDate : 'MM/YY'}
+            </Text>
+          </TouchableOpacity>
         </View>
         <View>
           <Text style={styles.iban}>IT 12 A 12345 12345 123456789012</Text>
@@ -138,8 +160,30 @@ const CreditCardForm = ({
     </>
   );
 };
-
+//
 const styles = StyleSheet.create({
+  selectStyle: {
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+    width: 70,
+  },
+  closeButtonStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-end',
+    margin: SIZES.small,
+    width: 36,
+    height: 36,
+    backgroundColor: COLORS.darkerPrimary,
+    borderRadius: 18,
+    shadowColor: COLORS.primary,
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 1 },
+  },
+  selectTextStyle: {
+    color: COLORS.primary,
+  },
   errorMessage: {
     color: COLORS.red,
     alignSelf: 'flex-start',
@@ -156,7 +200,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     width: '100%',
     justifyContent: 'space-between',
-    height: 250,
+    height: 260,
     paddingHorizontal: SIZES.medium,
     borderRadius: SIZES.medium,
     backgroundColor: COLORS.darkerPrimary,
@@ -186,7 +230,6 @@ const styles = StyleSheet.create({
     marginTop: SIZES.xSmall,
     width: 80,
   },
-
   postamatImg: {
     width: '100%',
     resizeMode: 'cover',
@@ -210,19 +253,19 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: SIZES.xLarge,
   },
-
   expirationContainer: {
+    gap: SIZES.xSmall,
     flexDirection: 'row',
-    gap: SIZES.small,
     alignSelf: 'center',
+    alignItems: 'center',
   },
   expirationText: {
     color: COLORS.primary,
-    fontSize: SIZES.small,
+    fontSize: SIZES.medium,
   },
   expirationDate: {
     color: COLORS.primary,
-    fontSize: SIZES.large,
+    fontSize: SIZES.xLarge,
   },
   iban: {
     color: COLORS.primary,

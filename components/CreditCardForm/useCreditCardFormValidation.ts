@@ -11,28 +11,36 @@ export const useCreditCardFormValidation = (
     [key in cardSchemaKeys]: string;
   }) => void
 ) => {
+  const handleSetErrors = useCallback(
+    (
+      prevErrors: { [key in cardSchemaKeys]: string },
+      field: cardSchemaKeys,
+      value: string | undefined
+    ) => {
+      const updatedErrors = { ...prevErrors, [field]: value };
+      checkIfSubmitReady(updatedErrors);
+      return updatedErrors;
+    },
+    [checkIfSubmitReady]
+  );
   const validate = useCallback(
     (field: cardSchemaKeys, updatedCard: ICreditCard) => {
       try {
         CardSchema.parse(updatedCard);
-        setErrors((prevErrors) => {
-          const updatedErrors = { ...prevErrors, [field]: undefined };
-          checkIfSubmitReady(updatedErrors);
-          return updatedErrors;
-        });
+        setErrors((prevErrors) =>
+          handleSetErrors(prevErrors, field, undefined)
+        );
       } catch (error) {
         const myError = error as ZodError;
         const message = myError.errors
           .filter((error) => error.path[0] === field)
           .map((error) => error.message);
-        setErrors((prevErrors) => {
-          const updatedErrors = { ...prevErrors, [field]: message[0] };
-          checkIfSubmitReady(updatedErrors);
-          return updatedErrors;
-        });
+        setErrors((prevErrors) =>
+          handleSetErrors(prevErrors, field, message[0])
+        );
       }
     },
-    [setErrors, checkIfSubmitReady]
+    [setErrors, handleSetErrors]
   );
 
   return { validate };

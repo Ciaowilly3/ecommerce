@@ -4,7 +4,7 @@ export const cardNumberMessage = 'credit card number must be 16 numbers long';
 export const expDateMessage = 'must be a valid date (MM/YY)';
 
 export const CardSchema = z.object({
-  cardNumber: z.string().length(16, cardNumberMessage),
+  cardNumber: z.string().length(19, cardNumberMessage),
   expDate: z.string().regex(expDateRegex, expDateMessage),
 });
 
