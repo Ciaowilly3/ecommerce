@@ -59,7 +59,6 @@ const CreditCardForm = ({
   console.log('experiment', 1);
   console.log('experiment', 2);
   console.log('experiment', 3);
-  console.log('experiment', 4);
 
   return (
     <>
