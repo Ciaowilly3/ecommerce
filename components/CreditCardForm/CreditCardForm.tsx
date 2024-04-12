@@ -56,6 +56,7 @@ const CreditCardForm = ({
     },
     [setCard, validate]
   );
+  console.log('experiment', 1);
 
   return (
     <>
