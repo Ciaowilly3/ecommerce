@@ -7,9 +7,11 @@ export const expDateValidation = (
 ) => {
   const currentYear = new Date().getFullYear().toString().slice(2);
   const currentMonth = new Date().getMonth() + 1;
+
   if (
     field === 'year' &&
     currentYear === selectedItem &&
+    expDate.month &&
     toNumber(expDate.month) < currentMonth
   )
     return false;

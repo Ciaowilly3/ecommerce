@@ -25,19 +25,24 @@ const ExpDateList = ({
     month: '',
   });
   const [error, setError] = useState<boolean>(false);
+
+  const handleSubmit = useCallback(() => {
+    handleChange(`${expDate.month}/${expDate.year}`, 'expDate');
+    setIsExpDateModalVisible(false);
+  }, [expDate.month, expDate.year, handleChange, setIsExpDateModalVisible]);
+
   const handleSelect = useCallback(
     (selectedItem: string, field: 'month' | 'year') => {
       if (!expDateValidation(selectedItem, field, expDate)) {
         setError(true);
-      } else setError(false);
+      } else if (expDate.month && expDate.year) setError(false);
       setExpDate((prev) => {
         const newExpDate = { ...prev, [field]: selectedItem };
-        if (newExpDate.month && newExpDate.year)
-          handleChange(`${newExpDate.month}/${newExpDate.year}`, 'expDate');
+
         return newExpDate;
       });
     },
-    [expDate, handleChange]
+    [expDate]
   );
   return (
     <>
@@ -86,8 +91,8 @@ const ExpDateList = ({
             <Text style={styles.errorText}>This card is already expired</Text>
           )}
           <TouchableOpacity
-            disabled={error}
-            onPress={() => setIsExpDateModalVisible(false)}
+            disabled={error || !expDate.month || !expDate.year}
+            onPress={() => handleSubmit()}
             style={styles.submitInput}
           >
             <Text style={styles.submitInputText}>Submit</Text>
