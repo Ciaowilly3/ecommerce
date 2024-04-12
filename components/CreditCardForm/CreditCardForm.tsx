@@ -78,7 +78,10 @@ const CreditCardForm = ({
         />
       )}
       <TouchableOpacity
-        onPress={() => setIsModalVisible((prev) => !prev)}
+        onPress={() => {
+          setIsModalVisible((prev) => !prev);
+          setCard({ cardNumber: '', expDate: '' });
+        }}
         style={styles.closeButtonStyle}
       >
         <FontAwesome5 name="times" size={18} color={COLORS.white} />
